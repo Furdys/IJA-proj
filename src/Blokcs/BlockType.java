@@ -1,3 +1,4 @@
+package Blokcs;
 
 public class BlockType {
 	
