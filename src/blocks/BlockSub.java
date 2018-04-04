@@ -7,7 +7,7 @@ public class BlockSub extends Block {
 		super(in);
 	}
 
-	public BlockType[] executet(){
+	public BlockType[] execute(){
 		double[] tmp = {IN[0].getValues()[0] - IN[1].getValues()[0]};
 		BlockType result = new BlockType(tmp, IN[0].getNames());
 		OUT = new BlockType[]{result};
