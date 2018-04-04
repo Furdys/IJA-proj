@@ -1,14 +1,22 @@
 
 public class Block {
 
-	Block(String name){
+	private String name;
+	private BlockType[] IN; 
+	private BlockType[] OUT;
+	
+	Block(String name, BlockType[] in){
+		this.IN = in;
 		this.name = name;
 	}
 	
 	
-	private String name;
-	private double IN; //change double to type later
-	private double OUT; //change double to type later
+	/**** main for basic testing ****/
+	public static void main(String args[]){
+		
+		
+	}
+
 	
 	
 	/***** basic operations
@@ -16,20 +24,33 @@ public class Block {
 	 * or let user create his own
 	 */
 	
-	public double add() {
-		return this.IN + this.OUT;
+	public BlockType[] add() {
+		double[] tmp = {IN[0].getValues()[0] + IN[1].getValues()[0]};
+		BlockType result = new BlockType(tmp, IN[0].getNames());
+		OUT = new BlockType[]{result};
+		return OUT;
+		
 	}
 	
-	public double substract(){
-		return IN-OUT;
+	public BlockType[] substract(){
+		double[] tmp = {IN[0].getValues()[0] - IN[1].getValues()[0]};
+		BlockType result = new BlockType(tmp, IN[0].getNames());
+		OUT = new BlockType[]{result};
+		return OUT;
 	}
 	
-	public double divide(){
-		return IN/OUT;
+	public BlockType[] divide(){
+		double[] tmp = {IN[0].getValues()[0] / IN[1].getValues()[0]};
+		BlockType result = new BlockType(tmp, IN[0].getNames());
+		OUT = new BlockType[]{result};
+		return OUT;
 	}
 	
-	public double multiply(){
-		return IN*OUT;
+	public BlockType[] multiply(){
+		double[] tmp = {IN[0].getValues()[0] * IN[1].getValues()[0]};
+		BlockType result = new BlockType(tmp, IN[0].getNames());
+		OUT = new BlockType[]{result};
+		return OUT;
 	}
 
 	/************ getters and setters ************/
@@ -41,22 +62,21 @@ public class Block {
 		this.name = name;
 	}
 
-	public double getIN() {
+	public BlockType[] getIN() {
 		return IN;
 	}
 
-	public void setIN(double iN) {
-		IN = iN;
+	public void setIN(BlockType[] in) {
+		this.IN = in;
 	}
 
-	public double getOUT() {
+	public BlockType[] getOUT() {
 		return OUT;
 	}
 
-	public void setOUT(double oUT) {
-		OUT = oUT;
+	public void setOUT(BlockType[] out) {
+		this.OUT = out;
 	}
-	
 	
 	
 	
