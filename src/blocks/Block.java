@@ -1,6 +1,6 @@
 package blocks;
 
-public class Block {
+public abstract class Block {
 
 	protected BlockType[] IN; 
 	protected BlockType[] OUT;
@@ -11,12 +11,10 @@ public class Block {
 	
 	
 	/**** main for basic testing ****/
-	public static void main(String args[]){
+	/*public static void main(String args[]){
 		
 		
-	}
-
-	
+	}*/
 
 
 	/************ getters and setters ************/
