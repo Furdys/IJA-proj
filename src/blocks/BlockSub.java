@@ -3,14 +3,15 @@ package blocks;
 public class BlockSub extends Block {
 
 	
-	BlockSub(BlockType[] in) {
+	BlockSub(Port[] in) {
 		super(in);
 	}
 
-	public BlockType[] execute(){
-		double[] tmp = {IN[0].getValues()[0] - IN[1].getValues()[0]};
-		BlockType result = new BlockType(tmp, IN[0].getNames());
-		OUT = new BlockType[]{result};
+	public Port[] execute(){
+		String[] arr = (String[]) IN[0].getNames().toArray();
+		Port result = new Port();
+		result.setValue(arr[0], IN[0].content.get(arr[0]) - IN[1].content.get(arr[0]));
+		OUT = new Port[]{result};
 		return OUT;
 	}
 }

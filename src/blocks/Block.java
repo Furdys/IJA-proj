@@ -1,11 +1,17 @@
 package blocks;
 
-public abstract class Block {
 
-	protected BlockType[] IN; 
-	protected BlockType[] OUT;
+
+public abstract class Block 
+{
+
+	protected Port[] IN; 
+
+	protected Port[] OUT;
+	private boolean executed = false;
 	
-	Block(BlockType[] in){
+	Block(Port[] in)
+	{
 		this.IN = in;
 	}
 	
@@ -19,22 +25,38 @@ public abstract class Block {
 
 	/************ getters and setters ************/
 
-	public BlockType[] getIN() {
+	/**
+	 * @return
+	 */
+	public Port[] getInputPorts() 
+	{
 		return IN;
 	}
 
-	public void setIN(BlockType[] in) {
+	public void setInputPorts(Port[] in) 
+	{
 		this.IN = in;
 	}
 
-	public BlockType[] getOUT() {
+	public Port[] getOutputPorts() 
+	{
 		return OUT;
 	}
 
-	public void setOUT(BlockType[] out) {
+	public void setOutputPorts(Port[] out) 
+	{
 		this.OUT = out;
 	}
 	
+	public boolean wasExecuted()
+	{
+		return this.executed;
+	}
+	
+	public void setExecuted()
+	{
+		this.executed = true;
+	}
 	
 	
 }

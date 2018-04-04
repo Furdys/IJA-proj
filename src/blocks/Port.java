@@ -7,9 +7,10 @@ import java.util.Set;
 
 public class Port
 {
-    private Map<String, Double> content = new HashMap<String, Double>();
+    protected Map<String, Double> content = new HashMap<String, Double>();
     private Port connectedPort = null;
-
+    private Block ownerBlock = null;
+    
     public Port(){
 
     }
@@ -75,5 +76,15 @@ public class Port
     public Port getConnectedPort()
     {
         return this.connectedPort;
+    }	
+    
+    public Block getOwnerBlock()
+    {
+        return this.ownerBlock;
+    }	
+    
+    public void setOwnerBlock(Block ownerBlock)
+    {
+        this.ownerBlock = ownerBlock;
     }	
 }
