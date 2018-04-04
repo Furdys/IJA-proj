@@ -1,4 +1,4 @@
-package Blokcs;
+package blocks;
 
 public class BlockDiv extends Block {
 
