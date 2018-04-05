@@ -10,9 +10,23 @@ public class Port
     protected Map<String, Double> content = new HashMap<String, Double>();
     private Port connectedPort = null;
     private Block ownerBlock = null;
-    
-    public Port(){
 
+    public Port()
+    {
+    }
+    
+    public Port(String name)
+    {
+        content.put(name, Double.NaN);
+    }
+    
+    public Port(String[] names)
+    {
+        for(String name : names)
+        {
+            // @todo add check for existing names
+            content.put(name, Double.NaN);
+        }
     }
 
     /**
@@ -36,7 +50,7 @@ public class Port
         // --- Check if name is present in this Port ---
         if(!this.content.containsKey(name))
         {
-            System.err.println("Port.setValue: Name not found in port");
+            System.err.format("Port.setValue: Name '%s' not found in port\n",name);
             return false;
         }
 
@@ -45,6 +59,18 @@ public class Port
 
         return true;
     }
+    
+    public double getValue(String name)     
+    {
+        // --- Check if name is present in this Port ---
+        if(!this.content.containsKey(name))
+        {
+            System.err.format("Port.getValue: Name '%s' not found in port\n",name);
+            return Double.NaN;
+        }
+
+        return this.content.get(name);
+    }   
 
 
 

@@ -1,9 +1,8 @@
 package blocks;
 
 public class BlockSub extends Block {
-
 	
-	BlockSub(Port[] in) {
+	public BlockSub(Port[] in) {
 		super(in);
 	}
 

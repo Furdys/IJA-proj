@@ -132,4 +132,17 @@ public class Scheme {
     {
         return this.name;
     }
+    
+    public boolean addBlock(Block block)
+    {
+        if(blocks.contains(block) == true)
+        {
+            System.err.println("Scheme.addBlock: Block is already added");
+            return false;
+        }
+        
+        blocks.add(block);
+        
+        return true;
+    }
 }
