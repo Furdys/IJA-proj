@@ -19,11 +19,11 @@ public class Scheme {
 //    private ArrayList<Block> dependentBlocks = new ArrayList<Block>();
     private Block nextBlock;
     
-    private int maxBlocks = 420;    // @todo Change later
+    private final int maxBlocks = 420;    // @todo Change later
     
     public void start(boolean step)
     {
-        Block startingBlock;
+        Block startingBlock = null;
         
         // --- Iterate every block ---
         for(int i = 0; i < this.blocks.size(); i++)
@@ -74,7 +74,7 @@ public class Scheme {
         block = this.findNonDependentBlock(block);
 
         // --- Check for loops --- 
-        if(inputPort.getBlock().wasExecuted == true)) // @todo This should be in Block class
+        if(block.wasExecuted() == true) // @todo This should be in Block class
         {
             System.err.println("ERROR: Loop detected (Tried to execute one block twice)!");
             return false;
@@ -82,12 +82,14 @@ public class Scheme {
         
         // --- Execute calculation ---
         block.execute();
+        
+        return true;
     }
     
     private Block findNonDependentBlock(Block block)
     {
         // --- Check if block can be executed ---
-        for(Port port : block.getIN())    // Check every input port
+        for(Port port : block.getInputPorts())    // Check every input port
         {
             Port inputPort = port.getConnectedPort();
             
@@ -100,11 +102,11 @@ public class Scheme {
             }
             
             // --- Check for block with no value ---
-            if(inputPort.getBlock().wasExecuted() == false)
+            if(inputPort.getOwnerBlock().wasExecuted() == false)
             {
                 // That means this block is waiting on inputPort's block calculation
                 //this.dependentBlocks.add(block); @ todo Save visited blocks to reduce redundant search
-                return this.findNonDependentBlock(inputPort.getBlock()); // Use recursive call (ask if inputPort's block is depended)
+                return this.findNonDependentBlock(inputPort.getOwnerBlock()); // Use recursive call (ask if inputPort's block is depended)
             }
         }
         

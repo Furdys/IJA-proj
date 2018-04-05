@@ -17,10 +17,10 @@ public abstract class Block
 	
 	
 	/**** main for basic testing ****/
-	/*public static void main(String args[]){
+	public static void main(String args[]){
 		
 		
-	}*/
+	}
 
 
 	/************ getters and setters ************/
@@ -57,6 +57,12 @@ public abstract class Block
 	{
 		this.executed = true;
 	}
+        
+        public Port[] execute()
+        {
+            System.err.println("Block.execute: Called non-overriden function");
+            return null;
+        }
 	
 	
 }
