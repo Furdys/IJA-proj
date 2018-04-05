@@ -2,7 +2,7 @@ package blocks;
 
 public class BlockDiv extends Block {
 
-	BlockDiv(Port[] in) {
+	public BlockDiv(Port[] in) {
 		super(in);
 	}
 

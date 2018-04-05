@@ -1,8 +1,8 @@
 package blocks;
+
 public class BlockMul extends Block {
 	
-	
-	BlockMul(Port[] in) {
+	public BlockMul(Port[] in) {
 		super(in);
 	}
 
