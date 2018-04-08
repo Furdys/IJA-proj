@@ -38,11 +38,11 @@ public class BlockTest
     public void test_blockAdd()
     {
        block = new BlockAdd(blockInput); 
-       Assert.assertEquals(false, block.wasExecuted());
+       Assert.assertFalse(block.wasExecuted());
        
        blockOutput = block.execute();
        
-       Assert.assertEquals(true, block.wasExecuted());
+       Assert.assertTrue(block.wasExecuted());
        Assert.assertEquals(12, blockOutput[0].getValue("x"), 0.02);
        
     }    
@@ -51,11 +51,11 @@ public class BlockTest
     public void test_blockSub()
     {
        block = new BlockSub(blockInput); 
-       Assert.assertEquals(false, block.wasExecuted());
+       Assert.assertFalse(block.wasExecuted());
        
        blockOutput = block.execute();
        
-       Assert.assertEquals(true, block.wasExecuted());
+       Assert.assertTrue(block.wasExecuted());
        Assert.assertEquals(-8, blockOutput[0].getValue("x"), 0.02);
     }    
     
@@ -63,11 +63,11 @@ public class BlockTest
     public void test_blockMul()
     {
        block = new BlockMul(blockInput); 
-       Assert.assertEquals(false, block.wasExecuted());
+       Assert.assertFalse(block.wasExecuted());
         
        blockOutput = block.execute();
        
-       Assert.assertEquals(true, block.wasExecuted());
+       Assert.assertTrue(block.wasExecuted());
        Assert.assertEquals(20, blockOutput[0].getValue("x"), 0.02);
     }    
     
@@ -75,11 +75,11 @@ public class BlockTest
     public void test_blockDiv()
     {
        block = new BlockDiv(blockInput); 
-       Assert.assertEquals(false, block.wasExecuted());
+       Assert.assertFalse(block.wasExecuted());
         
        blockOutput = block.execute();
        
-       Assert.assertEquals(true, block.wasExecuted());
+       Assert.assertTrue(block.wasExecuted());
        Assert.assertEquals(0.2, blockOutput[0].getValue("x"), 0.02);
     }   
     

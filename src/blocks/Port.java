@@ -72,7 +72,10 @@ public class Port
         return this.content.get(name);
     }   
 
-
+    public Map<String, Double> getContent()     
+    {
+        return this.content;
+    }  
 
     /**
      * @brief Get set of Port type names
