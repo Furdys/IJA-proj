@@ -1,7 +1,6 @@
 import blocks.*;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
 
@@ -11,13 +10,6 @@ public class PortTest
     private Port port;
     
     
-    
-    @Before
-    public void setUp()
-    {
-
-    }
- 
     @After
     public void tearDown()
     {
@@ -50,5 +42,13 @@ public class PortTest
         Assert.assertTrue(port.setValue("x", 42));
         Assert.assertEquals(42, port.getValue("x"), 0.02);
         
+    }
+    
+    @Test
+    public void test_compatibily()
+    {
+        port = new Port("x");
+        Assert.assertTrue(port.compatibile(new Port("x"))); 
+        Assert.assertFalse(port.compatibile(new Port("y")));
     }
 }

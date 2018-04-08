@@ -24,6 +24,9 @@ public class BlockTest
        
        blockInput[0].setValue("x", 2);
        blockInput[1].setValue("y", 10);
+       
+       blockOutput = new Port[1];
+       blockOutput[0] = new Port("x");
     }
  
     @After
@@ -37,7 +40,7 @@ public class BlockTest
     @Test
     public void test_blockAdd()
     {
-       block = new BlockAdd(blockInput); 
+       block = new BlockAdd(blockInput, blockOutput); 
        Assert.assertFalse(block.wasExecuted());
        
        blockOutput = block.execute();
@@ -50,7 +53,7 @@ public class BlockTest
     @Test
     public void test_blockSub()
     {
-       block = new BlockSub(blockInput); 
+       block = new BlockSub(blockInput, blockOutput); 
        Assert.assertFalse(block.wasExecuted());
        
        blockOutput = block.execute();
@@ -62,7 +65,7 @@ public class BlockTest
     @Test
     public void test_blockMul()
     {
-       block = new BlockMul(blockInput); 
+       block = new BlockMul(blockInput, blockOutput); 
        Assert.assertFalse(block.wasExecuted());
         
        blockOutput = block.execute();
@@ -74,7 +77,7 @@ public class BlockTest
     @Test
     public void test_blockDiv()
     {
-       block = new BlockDiv(blockInput); 
+       block = new BlockDiv(blockInput, blockOutput); 
        Assert.assertFalse(block.wasExecuted());
         
        blockOutput = block.execute();
@@ -86,7 +89,7 @@ public class BlockTest
     @Test
     public void test_inputPorts()
     {
-       block = new BlockAdd(null); 
+       block = new BlockAdd(null, null); 
        Assert.assertNull(block.getInputPorts());
        
        block.setInputPorts(blockInput);
@@ -96,7 +99,7 @@ public class BlockTest
     @Test
     public void test_outputPort()
     {
-       block = new BlockAdd(null); 
+       block = new BlockAdd(null, null); 
        Assert.assertNull(block.getOutputPorts());
        
        block.setOutputPorts(blockInput);

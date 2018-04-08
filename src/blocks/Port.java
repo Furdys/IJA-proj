@@ -57,6 +57,9 @@ public class Port
         // --- Set value ---
         this.content.put(name, value);
 
+        //if(this.connectedPort != null)
+            //return this.connectedPort.setValue(name, value);
+        
         return true;
     }
     
@@ -85,6 +88,12 @@ public class Port
     {
         return this.content.keySet();
     }
+    
+    public String getName()
+    {
+        // Temporary
+        return this.content.keySet().toArray()[0].toString();
+    }
 
 
     public boolean setConnectedPort(Port other)
@@ -98,6 +107,7 @@ public class Port
 
         // --- Connect Ports ---
         this.connectedPort = other;
+        other.connectedPort = this;
 
         return true;
     }
