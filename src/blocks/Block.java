@@ -14,15 +14,7 @@ public abstract class Block
 	{
 		this.IN = in;
 	}
-	
-	
-	/**** main for basic testing ****/
-	public static void main(String args[])
-	{
-		
-		
-	}
-
+        
 
 	/************ getters and setters ************/
 
