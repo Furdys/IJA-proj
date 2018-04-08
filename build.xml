@@ -6,15 +6,14 @@
 		<pathelement path="src"/>
 	</path>
 
-	<path id="compile.path">
+	<path id="javac.path">
 		<path refid="src.path"/>
+		<fileset dir="lib" includes="*.jar"/>
 	</path>
 
 	<path id="test.path">
-		<path refid="compile.path"/>
+		<path refid="javac.path"/>
 		<pathelement path="build"/>
-
-		<fileset dir="lib" includes="*.jar"/>
 	</path>
 
 	<!-- ===== Settings ===== -->
@@ -25,32 +24,44 @@
 	<!-- ===== Targets ===== -->
 	<target name="clean">
 		<delete dir="build"/>
+		<delete dir="dest-client"/>
+
+		<mkdir dir="build"/>
+		<mkdir dir="dest-client"/>
 	</target>
 
-	<target name="compile">
+	<target name="javac">
 		<mkdir dir="build"/>
 		<javac destdir="build">
 		    <src path="src"/>
-		    <classpath refid="compile.path"/>
+		    <classpath refid="javac.path"/>
 		</javac>
 	</target>
 
-	<target name="compile-test" depends="compile">
-		<javac srcdir="test/" destdir="build">
-		    <classpath refid="test.path"/>
-		</javac>
+	<target name="compile" depends="javac">
+		<mkdir dir="dest-client"/>
+		<jar destfile="dest-client/ija-client.jar" basedir="build">
+			<manifest>
+				<attribute name="Main-Class" value="Main"/>
+			</manifest>
+		</jar>
 	</target>
 
-	<target name="run" depends="compile,compile-test">
+	<target name="run" depends="javac">
 	    <junit fork="true" printsummary="yes" haltonfailure="no">
 			<classpath refid="test.path"/>
 			<batchtest>
 			   <fileset dir="build">
-				    <include name="**/*Test.class" />
+				    <include name="**/test/*Test.class"/>
 			   </fileset>
 			</batchtest>
-			<formatter type="plain" usefile="false" />
+			<formatter type="plain" usefile="false"/>
 		</junit>
 	</target>
 
+	<!--
+	<target name="run" depends="compile">
+		<java jar="dest-client/ija-client.jar" fork="true"/>
+	</target>
+	-->
 </project>

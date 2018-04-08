@@ -1,3 +1,5 @@
+package test;
+
 import blocks.*;
 
 import org.junit.Assert;
