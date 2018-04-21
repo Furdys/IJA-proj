@@ -10,19 +10,12 @@ public abstract class Block
 	protected Port[] OUT;
 	private boolean executed = false;
 	
-	Block(Port[] in)
+	Block(Port[] in, Port[] out)
 	{
 		this.IN = in;
+                this.OUT = out;
 	}
-	
-	
-	/**** main for basic testing ****/
-	public static void main(String args[])
-	{
-		
-		
-	}
-
+        
 
 	/************ getters and setters ************/
 
@@ -64,6 +57,10 @@ public abstract class Block
 		System.err.println("Block.execute: Called non-overriden function");
 		return null;
 	}
+
+    private Port[] clone(Port[] in) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 	
 	
 }
