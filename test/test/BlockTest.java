@@ -1,6 +1,6 @@
 package test;
 
-import blocks.*;
+import ija.proj.blocks.*;
 
 import org.junit.Assert;
 import org.junit.Before;

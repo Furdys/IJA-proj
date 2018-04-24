@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+	<!-- ===== Paths ===== -->
+	<path id="src.path">    
+		<pathelement path="src"/>
+	</path>
+
+	<path id="javac.path">
+		<path refid="src.path"/>
+		<fileset dir="lib" includes="*.jar"/>
+	</path>
+
+	<path id="test.path">
+		<path refid="javac.path"/>
+		<pathelement path="build"/>
+	</path>
+
+	<!-- ===== Settings ===== -->
+	<presetdef name="javac">
+		<javac includeantruntime="false" />
+	</presetdef>
+
+	<!-- ===== Targets ===== -->
+	<target name="clean">
+		<delete dir="build"/>
+		<delete dir="dest-client"/>
+
+		<mkdir dir="build"/>
+		<mkdir dir="dest-client"/>
+	</target>
+
+	<target name="javac">
+		<mkdir dir="build"/>
+		<javac destdir="build">
+		    <src path="src"/>
+		    <classpath refid="javac.path"/>
+		</javac>
+	</target>
+
+	<target name="compile" depends="javac">
+		<mkdir dir="dest-client"/>
+		<jar destfile="dest-client/ija-client.jar" basedir="build">
+			<manifest>
+				<attribute name="Main-Class" value="Main"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="run" depends="javac">
+	    <junit fork="true" printsummary="yes" haltonfailure="no">
+			<classpath refid="test.path"/>
+			<batchtest>
+			   <fileset dir="build">
+				    <include name="**/test/*Test.class"/>
+			   </fileset>
+			</batchtest>
+			<formatter type="plain" usefile="false"/>
+		</junit>
+	</target>
+
+	<!--
+	<target name="run" depends="compile">
+		<java jar="dest-client/ija-client.jar" fork="true"/>
+	</target>
+	-->
+</project>

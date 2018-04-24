@@ -1,4 +1,4 @@
-package blocks;
+package ija.proj.blocks;
 
 public class BlockMul extends Block 
 {
