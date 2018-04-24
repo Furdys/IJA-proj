@@ -1,4 +1,4 @@
-package ija.proj.blocks;
+package ija.proj.block;
 
 import java.util.HashMap;
 import java.util.Map;
