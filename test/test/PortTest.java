@@ -20,16 +20,13 @@ public class PortTest
 
     @Test
     public void test_constructor()
-    {
-       port = new Port();
-       Assert.assertEquals(0, port.getNames().size());
-       
-       port = new Port("x");
+    {       
+       port = new Port("x", Port.inputType);
        Assert.assertEquals(1, port.getNames().size());
        Assert.assertTrue(port.getNames().contains("x"));
        
        String[] names = {"x", "y", "z"};
-       port = new Port(names);
+       port = new Port(names, Port.outputType);
        Assert.assertEquals(3, port.getNames().size());
        Assert.assertArrayEquals(names, port.getNames().toArray());
     }    
@@ -38,7 +35,7 @@ public class PortTest
     @Test
     public void test_values()
     {
-        port = new Port("x");
+        port = new Port("x", Port.inputType);
         Assert.assertEquals(Double.NaN, port.getValue("x"), 0.02);
         
         Assert.assertTrue(port.setValue("x", 42));
@@ -49,8 +46,11 @@ public class PortTest
     @Test
     public void test_compatibily()
     {
-        port = new Port("x");
-        Assert.assertTrue(port.compatibile(new Port("x"))); 
-        Assert.assertFalse(port.compatibile(new Port("y")));
+        port = new Port("x", Port.inputType);
+        
+        Assert.assertTrue(port.compatibile(new Port("x", Port.outputType))); 
+        
+        Assert.assertFalse(port.compatibile(new Port("x", Port.inputType)));
+        Assert.assertFalse(port.compatibile(new Port("y", Port.outputType)));
     }
 }

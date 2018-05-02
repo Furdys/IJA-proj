@@ -7,25 +7,29 @@ import java.util.Set;
 
 public class Port
 {
+    // --- Atributtes ---
     protected Map<String, Double> content = new HashMap<String, Double>();
     private Port connectedPort = null;
     private Block ownerBlock = null;
-
-    public Port()
+    private boolean type;
+    
+    // --- Constants ---
+    public static final boolean inputType = true;
+    public static final boolean outputType = false;
+    
+    public Port(String name, boolean type)
     {
+        this.type = type;
+        this.content.put(name, Double.NaN);
     }
     
-    public Port(String name)
-    {
-        content.put(name, Double.NaN);
-    }
-    
-    public Port(String[] names)
+    public Port(String[] names, boolean type)
     {
         for(String name : names)
         {
             // @todo add check for existing names
-            content.put(name, Double.NaN);
+            this.type = type;
+            this.content.put(name, Double.NaN);
         }
     }
 
@@ -36,7 +40,8 @@ public class Port
      */
     public boolean compatibile(Port other)
     {
-        return this.getNames().equals(other.getNames());
+        return this.getNames().equals(other.getNames()) && this.getType() != other.getType();
+        // Check if same value types are used && one block is input and other output
     }
 
     /**
@@ -57,8 +62,9 @@ public class Port
         // --- Set value ---
         this.content.put(name, value);
 
-        //if(this.connectedPort != null)
-            //return this.connectedPort.setValue(name, value);
+        // --- Set value to connected port ---
+        if(this.type == Port.outputType && this.connectedPort != null)  // Only set value to output port
+            return this.connectedPort.setValue(name, value);
         
         return true;
     }
@@ -98,6 +104,13 @@ public class Port
 
     public boolean setConnectedPort(Port other)
     {
+        // --- Check if port is empty ---
+        if(this.connectedPort != null || other.connectedPort != null)
+        {
+            System.err.println("Port.setConnectedPort: Port is already connected");
+            return false;                
+        }
+        
         // --- Check if Ports are comptibile ---
         if(!this.compatibile((other)))
         {
@@ -125,5 +138,10 @@ public class Port
     public void setOwnerBlock(Block ownerBlock)
     {
         this.ownerBlock = ownerBlock;
+    }	
+    
+    public boolean getType()
+    {
+        return this.type;
     }	
 }
