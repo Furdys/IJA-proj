@@ -9,31 +9,11 @@ public class Scheme
     private ArrayList<Block> blocks = new ArrayList<Block>();
     private ArrayList<Block> notExecutedBlocks = new ArrayList<Block>();
     
-    /*
-    private boolean executeBlock(Block block)
-    {
-        // --- Check for null block ---
-        if(block == null)
-        {
-            System.err.println("ERROR: Tried to execute null block");
-            return false;        
-        }
-        
-        block = this.findNonDependentBlock(block);
-
-        // --- Check for loops --- 
-        if(block.wasExecuted() == true) // @todo This should be in Block class
-        {
-            System.err.println("ERROR: Loop detected (Tried to execute one block twice)!");
-            return false;
-        }
-        
-        // --- Execute calculation ---
-        block.execute();
-        
-        return true;
-    }    
-    */
+    /**
+     * @brief Adds block to scheme blocks list
+     * @param block Block to be added
+     * @return true if succesful, false if not
+     */
     public boolean addBlock(Block block)
     {
         // --- Check for null block ---
@@ -55,21 +35,37 @@ public class Scheme
         return true;
     }
     
+    /**
+     * @brief Runs the calucation of scheme
+     */
     public void run()
     {
+        // --- Get user input to not connected ports ---
+        this.searchUserDependentBlocks();
+        
+        // --- Copy blocks list ---
         this.notExecutedBlocks = new ArrayList<Block>(this.blocks);
         
+        // --- Create expected block variable ---
         Block expectedNextBlock = null;
         
+        // --- Execution ---
         while(!this.notExecutedBlocks.isEmpty())
         {
+            // -- None block is expected to be next --
             if(expectedNextBlock == null)
                 expectedNextBlock = this.notExecutedBlocks.get(0);
             
+            // -- Do one step --
             expectedNextBlock = this.step(expectedNextBlock);
         }
     }
     
+    /**
+     * @brief Does one step of running scheme
+     * @param expectedNextBlock Block that is expected to be executed in this step
+     * @return Block that is expected to be executed in next step or null when no idea what should be executed next
+     */
     private Block step(Block expectedNextBlock)
     {
         // --- Find block that can be executed ---
@@ -90,6 +86,10 @@ public class Scheme
         return null;
     }
     
+    /**
+     * @brief Check all blocks in scheme if they need user's input
+     * @todo Input Dialog
+     */
     private void searchUserDependentBlocks()
     {
         for(Block block : this.blocks)  // For every block in this scheme
@@ -112,7 +112,11 @@ public class Scheme
         }
     }
     
-    
+    /**
+     * @brief Search first non-dependent block in specified blocks ancestors
+     * @param block Block from where to start search
+     * @todo Not sure what happens when there is nowhere to continue search
+     */    
     public Block findNonDependentBlock(Block block)
     {
         // --- Check if this block can be executed ---
@@ -149,6 +153,4 @@ public class Scheme
         // --- Block is not depended & can be executed ---
         return block;
     }
-    
-    
 }
