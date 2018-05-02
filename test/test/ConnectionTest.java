@@ -28,8 +28,8 @@ public class ConnectionTest {
     @Test
     public void test_basicConnection()
     {
-       Block blockA = new BlockAdd(); 
-       Block blockB = new BlockAdd(); 
+       blockA = new BlockAdd(); 
+       blockB = new BlockAdd(); 
 
        blockA.getInputPort(0).setValue("float", 6);
        blockA.getInputPort(1).setValue("float", 12);
@@ -48,8 +48,8 @@ public class ConnectionTest {
     @Test
     public void test_dependentConnection()
     {
-       Block blockA = new BlockAdd(); 
-       Block blockB = new BlockAdd(); 
+       blockA = new BlockAdd(); 
+       blockB = new BlockAdd(); 
 
        blockA.getInputPort(0).setValue("float", 0);
        blockA.getInputPort(1).setValue("float", 1);

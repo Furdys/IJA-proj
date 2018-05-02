@@ -17,21 +17,23 @@ public class Port
     public static final boolean inputType = true;
     public static final boolean outputType = false;
     
-    public Port(String name, boolean type)
-    {
-        this.type = type;
-        this.content.put(name, Double.NaN);
-    }
-    
+    // --- Constructors ---
     public Port(String[] names, boolean type)
     {
+        this.type = type;
+        
         for(String name : names)
         {
             // @todo add check for existing names
-            this.type = type;
+            
             this.content.put(name, Double.NaN);
         }
     }
+    
+    public Port(String name, boolean type)
+    {
+        this(new String[]{name}, type);
+    } 
 
     /**
      * @brief Checks if two Ports have compatibile type for connection
@@ -79,7 +81,21 @@ public class Port
         }
 
         return this.content.get(name);
-    }   
+    }
+    
+    /**
+     * @brief Check if port has missing value
+     * @return true if any value equals Double.NaN, false if every value is legit
+     */
+    public boolean hasNaNValue()
+    {
+        for(double value : this.getContent().values())
+        {
+            if(Double.isNaN(value))
+                return true;
+        }
+        return false;
+    }
 
     public Map<String, Double> getContent()     
     {
@@ -100,7 +116,6 @@ public class Port
         // Temporary
         return this.content.keySet().toArray()[0].toString();
     }
-
 
     public boolean setConnectedPort(Port other)
     {

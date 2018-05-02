@@ -8,28 +8,37 @@ public abstract class Block
     private boolean executed = false;
 
     // --- Cunstructors ---
+    // Default one
     Block(Port[] in, Port[] out)
     {
         this.inputPorts = in;
         this.outputPorts = out;
+        
+        // -- Set owner to ports --
+        for(Port port : this.inputPorts)
+        {
+            port.setOwnerBlock(this);
+        }
+        for(Port port : this.outputPorts)
+        {
+            port.setOwnerBlock(this);
+        }
     }
 
+    // Other possible combinations
     Block(Port in, Port out)
     {
-        this.inputPorts = new Port[]{in};
-        this.outputPorts = new Port[]{out};
+        this(new Port[]{in}, new Port[]{out});
     }
 
     Block(Port[] in, Port out)
     {
-        this.inputPorts = in;
-        this.outputPorts = new Port[]{out};
+        this(in, new Port[]{out});
     }
 
     Block(Port in, Port[] out)
     {
-        this.inputPorts = new Port[]{in};
-        this.outputPorts = out;
+        this(new Port[]{in}, out);
     }        
 
     // --- Methods ---
@@ -47,7 +56,7 @@ public abstract class Block
         }
         
         // --- Check for dependency/missing value ---
-        for(Port port : this.inputPorts)    // For every input port
+        for(Port port : this.getInputPorts())    // For every input port
         {
             for(double value : port.content.values()) // For every value in every input port
             {
@@ -76,20 +85,25 @@ public abstract class Block
     // --- Setters and getters ---
     public Port getInputPort(int index) 
     {
-            return this.inputPorts[index];
+        return this.inputPorts[index];
     }  
     
     public Port getOutputPort(int index) 
     {
-            return this.outputPorts[index];
+        return this.outputPorts[index];
     }   
     
-    /*  // Do we need those?
     public Port[] getInputPorts() 
     {
-            return this.inputPorts;
+        return this.inputPorts;
+    }
+    
+    public boolean wasExecuted() 
+    {
+        return this.executed;
     }
 
+    /*  // Do we need those?
     public void setInputPorts(Port[] in) 
     {
             this.inputPorts = in;

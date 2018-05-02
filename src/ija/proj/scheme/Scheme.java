@@ -1,0 +1,73 @@
+package ija.proj.scheme;
+
+import ija.proj.block.*;
+import java.util.ArrayList;
+
+public class Scheme
+{
+    private String name;
+    private ArrayList<Block> blocks = new ArrayList<Block>();  
+    
+    private boolean executeBlock(Block block)
+    {
+        // --- Check for null block ---
+        if(block == null)
+        {
+            System.err.println("ERROR: Tried to execute null block");
+            return false;        
+        }
+        
+        block = this.findNonDependentBlock(block);
+
+        // --- Check for loops --- 
+        if(block.wasExecuted() == true) // @todo This should be in Block class
+        {
+            System.err.println("ERROR: Loop detected (Tried to execute one block twice)!");
+            return false;
+        }
+        
+        // --- Execute calculation ---
+        block.execute();
+        
+        return true;
+    }    
+    
+    public Block findNonDependentBlock(Block block)
+    {
+        // --- Check if this block can be executed ---
+        for(Port port : block.getInputPorts())    // For every input port
+        {
+            Port connectedPort = port.getConnectedPort();   // Output port of previous block
+            
+            // --- Check if port is not connected ---
+            if(connectedPort == null)
+            {
+                if(port.hasNaNValue())
+                {
+                    // This should never happen, user must fill every non-connected port before start
+                    System.err.println("Scheme.findNonDependentBlock: Block is dependent on user input");
+                    //System.exit(1);   
+                }
+                else
+                    continue;
+            }
+            else
+            {
+                // --- Check for block with no value ---
+                if(connectedPort.getOwnerBlock().wasExecuted() == false)
+                {
+                    // That means this block is waiting on connectedPort's block calculation
+
+                    //this.dependentBlocks.add(block); @ todo Save visited blocks to reduce redundant search
+
+                    return this.findNonDependentBlock(connectedPort.getOwnerBlock()); // Use recursive call (ask if inputPort's block is depended)
+                }
+            }
+        }
+        
+        // --- Block is not depended & can be executed ---
+        return block;
+    }
+    
+    
+}
