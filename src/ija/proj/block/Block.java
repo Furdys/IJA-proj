@@ -33,7 +33,11 @@ public abstract class Block
     }        
 
     // --- Methods ---
-    public void execute()
+    /**
+     * @brief Does general things when executed and calls block-specific action using executeSpecific()
+     * @return true when block was executed, false when block is dependet on not yet executed block
+     */
+    public boolean execute()
     {
         // --- Check for loops ---
         if(this.executed == true)
@@ -42,11 +46,27 @@ public abstract class Block
             System.exit(2);        
         }
         
+        // --- Check for dependency/missing value ---
+        for(Port port : this.inputPorts)    // For every input port
+        {
+            for(double value : port.content.values()) // For every value in every input port
+            {
+                if(Double.isNaN(value)) // If value is not yet calculated (connected block wasn't executed)
+                {
+                    return false;
+                }
+            }
+        }
+        
         this.executeSpecific();
 
         this.executed = true;
+        return true;
     }
 
+     /**
+     * @brief Virtual method to be replaced by block implemetation. it contains specific action when block is executed
+     */
     void executeSpecific()
     {
         System.err.println("Block.executeSpecific(): Called non-overriden function");

@@ -75,6 +75,17 @@ public class BlockTest
        
        Assert.assertEquals(0.2, block.getOutputPort(0).getValue("float"), 0.02);
     }   
+
+    @Test
+    public void test_missingInput()
+    {
+       block = new BlockAdd(); 
+
+       block.getInputPort(0).setValue("float", 2);
+       
+       Assert.assertFalse(block.execute());
+       Assert.assertEquals(Double.NaN, block.getOutputPort(0).getValue("float"), 0.02);
+    }   
     
     /*
     @Test
