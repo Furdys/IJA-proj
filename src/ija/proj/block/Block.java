@@ -97,6 +97,11 @@ public abstract class Block
     {
         return this.inputPorts;
     }
+
+    public Port[] getOutputPorts() 
+    {
+            return this.outputPorts;
+    }
     
     public boolean wasExecuted() 
     {
@@ -109,10 +114,6 @@ public abstract class Block
             this.inputPorts = in;
     }
 
-    public Port[] getOutputPorts() 
-    {
-            return this.outputPorts;
-    }
 
     public void setOutputPorts(Port[] out) 
     {
