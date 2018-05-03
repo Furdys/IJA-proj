@@ -50,11 +50,11 @@ public abstract class Block implements Serializable
      */
     public boolean execute()
     {
-        // --- Check for loops ---
+        // --- Check for loops ---  // I think we don't need this anymore, it's in findDependency
         if(this.executed == true)
         {
             System.err.println("Block.execute(): Block was already executed (loop detected)");
-            System.exit(2);        
+            //System.exit(2);        
         }
         
         // --- Check for dependency/missing value ---
@@ -81,7 +81,7 @@ public abstract class Block implements Serializable
     void executeSpecific()
     {
         System.err.println("Block.executeSpecific(): Called non-overriden function");
-        System.exit(1);
+        //System.exit(1);
     }       
 
     // --- Setters and getters ---
