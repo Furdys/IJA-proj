@@ -7,6 +7,8 @@ import org.junit.Assert;
 
 import ija.proj.block.*;
 import ija.proj.scheme.*;
+import ija.proj.block.arithmetic.*;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
