@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.Assert;
 
 import ija.proj.block.*;
-import ija.proj.block.arithmetic.*;
 
 
 public class ConnectionTest {

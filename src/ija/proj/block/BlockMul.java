@@ -1,6 +1,4 @@
-package ija.proj.block.arithmetic;
-
-import ija.proj.block.*;
+package ija.proj.block;
 
 public class BlockMul extends BlockArithmetic 
 {

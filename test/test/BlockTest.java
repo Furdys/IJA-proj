@@ -1,7 +1,6 @@
 package test;
 
 import ija.proj.block.*;
-import ija.proj.block.arithmetic.*;
 
 import org.junit.Assert;
 import org.junit.Before;

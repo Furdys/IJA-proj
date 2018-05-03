@@ -2,7 +2,6 @@ package test;
 
 import ija.proj.block.*;
 import ija.proj.scheme.*;
-import ija.proj.block.arithmetic.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
