@@ -1,6 +1,8 @@
 package ija.proj.block;
 
-public abstract class Block 
+import java.io.Serializable;
+
+public abstract class Block implements Serializable
 {
     // --- Attributes ---
     private Port[] inputPorts; 

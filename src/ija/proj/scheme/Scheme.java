@@ -1,9 +1,10 @@
 package ija.proj.scheme;
 
 import ija.proj.block.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Scheme
+public class Scheme implements Serializable
 {
     // --- Attributes ---
     private String name;
@@ -282,5 +283,10 @@ public class Scheme
         
         // --- Block is not depended & can be executed ---
         return block;
+    }
+    
+    public ArrayList<Block> getBlocks()
+    {
+        return this.blocks;
     }
 }

@@ -1,11 +1,12 @@
 package ija.proj.block;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 
-public class Port
+public class Port implements Serializable
 {
     // --- Atributtes ---
     protected Map<String, Double> content = new HashMap<String, Double>();
