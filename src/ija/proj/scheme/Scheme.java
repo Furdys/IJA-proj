@@ -5,15 +5,26 @@ import java.util.ArrayList;
 
 public class Scheme
 {
+    // --- Attributes ---
     private String name;
-    private ArrayList<Block> blocks = new ArrayList<Block>();
-    private ArrayList<Block> notExecutedBlocks = new ArrayList<Block>();
-    private ArrayList<Block> loopDetectionTrace = new ArrayList<Block>();
+    private boolean readOnly;
+    private boolean finished;
+    private ArrayList<Block> blocks;
+    private ArrayList<Block> notExecutedBlocks;
+    private ArrayList<Block> loopDetectionTrace;
+    private Block expectedNextBlock;
     
-    private Block loopDetected = new BlockAdd();    // Pseudo block beacuse fuck Java
+    // --- Constants ---
+    public static final Block LoopDetected = new BlockAdd();    // Pseudo block beacuse fuck Java
     
-    public Scheme()
+    // --- Constructor ---
+    public Scheme(String name)
     {
+        this.name = name;
+        this.readOnly = false;
+        this.finished = false;
+        this.blocks = new ArrayList<Block>();
+        this.expectedNextBlock = null;
     }
     
     /**
@@ -23,6 +34,12 @@ public class Scheme
      */
     public boolean addBlock(Block block)
     {
+        if(this.readOnly)
+        {
+            System.err.println("Schene.addBlock(): Scheme is read-only");
+            return false;     
+        }
+        
         // --- Check for null block ---
         if(block == null)
         {
@@ -42,34 +59,108 @@ public class Scheme
         return true;
     }
     
+    public boolean removeBlock(Block block)
+    {
+        if(this.readOnly)
+        {
+            System.err.println("Schene.removeBlock(): Scheme is read-only");
+            return false;     
+        }
+        
+        // --- Check for null block ---
+        if(block == null)
+        {
+            System.err.println("Schene.removeBlock(): Tried to add null block");
+            return false;     
+        }
+        
+        // --- Check for existence ---
+        if(!this.blocks.contains(block))
+        {
+            System.err.println("Schene.removeBlock(): Scheme doesn't contain this block");
+            return false;     
+        }
+        
+        this.blocks.remove(block);
+        
+        return true;
+    }
+    
     /**
      * @brief Runs the calucation of scheme
      */
     public boolean run()
+    { 
+        // --- Execution ---
+        do
+        {
+            boolean runStepOK;
+            runStepOK = this.runStep();
+            
+            if(!runStepOK)
+                return false;
+        }
+        while(!this.finished);
+        
+        return true;
+    }
+    
+    public boolean runStep()
     {
+        // --- Already finished executing ---
+        if(this.finished)
+        {
+            System.err.println("Schene.runStep(): Scheme already finished executing");
+            return false;             
+        }
+ 
+        // --- Not yet finished executing ---
+        // -- First step --
+        if(!this.readOnly)  // Not in middle of executing (= this is first step)
+        {
+            boolean preRunOK = this.preRun(); // Make run prerequisites
+            if(!preRunOK) 
+                return false;   // Return false if preRun() failed
+        } 
+        
+        // -- Other steps ---
+        // - None block is expected to be next -
+        if(this.expectedNextBlock == null)
+            this.expectedNextBlock = this.notExecutedBlocks.get(0);  // Get first block in execution queqe
+
+        // - Do one step -
+        this.expectedNextBlock = this.step_internal(this.expectedNextBlock);
+
+        // - Check loop detection -
+        if(this.expectedNextBlock == Scheme.LoopDetected)
+            return false;
+        
+        // - Check if finished -
+        if(this.notExecutedBlocks.isEmpty())
+            this.finished = true;     
+        
+        return true;
+    }
+    
+    private boolean preRun()
+    {
+        // --- Check read only ---
+        if(this.finished)
+        {
+            System.err.println("Schene.pre_run(): Can't run scheme twice");
+            return false;     
+        }
+        this.readOnly = true;
+        
         // --- Get user input to not connected ports ---
         this.searchUserDependentBlocks();
         
         // --- Copy blocks list ---
         this.notExecutedBlocks = new ArrayList<Block>(this.blocks);
         
-        // --- Create expected block variable ---
-        Block expectedNextBlock = null;
-        
-        // --- Execution ---
-        while(!this.notExecutedBlocks.isEmpty())
-        {
-            // -- None block is expected to be next --
-            if(expectedNextBlock == null)
-                expectedNextBlock = this.notExecutedBlocks.get(0);  // Get first block in execution queqe
-            
-            // -- Do one step --
-            expectedNextBlock = this.step(expectedNextBlock);
-            
-            // -- Check loop detection --
-            if(expectedNextBlock == this.loopDetected)
-                return false;
-        }
+        // --- Reset expected block variable ---
+        this.expectedNextBlock = null;
+        this.loopDetectionTrace = new ArrayList<Block>();
         
         return true;
     }
@@ -79,13 +170,13 @@ public class Scheme
      * @param expectedNextBlock Block that is expected to be executed in this step
      * @return Block that is expected to be executed in next step or null when no idea what should be executed next
      */
-    private Block step(Block expectedNextBlock)
+    private Block step_internal(Block expectedNextBlock)
     {
         // --- Find block that can be executed ---
         Block realNextBlock = findNonDependentBlock(expectedNextBlock);
         
-        if(realNextBlock == this.loopDetected)
-            return this.loopDetected;
+        if(realNextBlock == Scheme.LoopDetected)
+            return Scheme.LoopDetected;
         
         // --- Execute block ---
         realNextBlock.execute();
@@ -134,7 +225,7 @@ public class Scheme
      * @todo Not sure what happens when there is nowhere to continue search
      * @return
      */      
-    public Block findNonDependentBlock(Block block)
+    private Block findNonDependentBlock(Block block)
     {
         this.loopDetectionTrace.clear();
         
@@ -154,7 +245,7 @@ public class Scheme
     {
         // --- Loop detection --- 
         if(this.loopDetectionTrace.contains(block)) 
-            return this.loopDetected; 
+            return Scheme.LoopDetected; 
         else 
             this.loopDetectionTrace.add(block);    
         

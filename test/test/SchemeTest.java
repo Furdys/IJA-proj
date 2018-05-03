@@ -48,10 +48,11 @@ public class SchemeTest {
         scheme = null;
     }
 
+    /* Scheme.findNonDependentBlock() is now private
     @Test
     public void test_nondependent_linear()
     {       
-        scheme = new Scheme();
+        scheme = new Scheme("Test");
         blockA = new BlockAdd();
         blockB = new BlockAdd();
         blockC = new BlockAdd();
@@ -68,7 +69,8 @@ public class SchemeTest {
         Assert.assertSame(blockA, scheme.findNonDependentBlock(blockA)); 
         Assert.assertSame(blockA, scheme.findNonDependentBlock(blockB)); 
         Assert.assertSame(blockA, scheme.findNonDependentBlock(blockC));    
-    }    
+    }   
+    */
     
     @Test
     public void test_run()
@@ -77,7 +79,7 @@ public class SchemeTest {
         blockB = new BlockAdd();
         blockC = new BlockAdd();
         
-        scheme = new Scheme();
+        scheme = new Scheme("Test");
         scheme.addBlock(blockA);
         scheme.addBlock(blockB);
         scheme.addBlock(blockC);
@@ -107,7 +109,7 @@ public class SchemeTest {
         blockF = new BlockSub();    
         blockG = new BlockMul();    
         
-        scheme = new Scheme();
+        scheme = new Scheme("Test");
         
         scheme.addBlock(blockD);
         scheme.addBlock(blockF);
@@ -153,7 +155,7 @@ public class SchemeTest {
     @Test 
     public void test_run_loop() 
     { 
-        scheme = new Scheme(); 
+        scheme = new Scheme("Test"); 
         blockA = new BlockAdd(); 
         blockB = new BlockSub(); 
          
@@ -168,4 +170,88 @@ public class SchemeTest {
          
         Assert.assertFalse(scheme.run()); 
     } 
+    
+    @Test
+    public void test_run_twice()
+    {       
+        blockA = new BlockAdd();
+        blockB = new BlockAdd();
+        blockC = new BlockAdd();
+        
+        scheme = new Scheme("Test");
+        scheme.addBlock(blockA);
+        scheme.addBlock(blockB);
+        scheme.addBlock(blockC);
+
+        blockA.getInputPort(0).setValue("float", 1);
+        blockA.getInputPort(1).setValue("float", 2);
+        
+        blockB.getInputPort(0).setConnectedPort(blockA.getOutputPort(0));
+        blockB.getInputPort(1).setValue("float", 3);
+        
+        blockC.getInputPort(0).setValue("float", 4);
+        blockC.getInputPort(1).setConnectedPort(blockB.getOutputPort(0));
+        
+        Assert.assertTrue(scheme.run());
+        Assert.assertFalse(scheme.run());
+    }   
+    
+    @Test
+    public void test_run_stepping()
+    {       
+        blockA = new BlockAdd();
+        blockB = new BlockSub();
+        blockC = new BlockMul();
+        blockD = new BlockDiv();
+        
+        scheme = new Scheme("Test");
+        
+        scheme.addBlock(blockC);
+        scheme.addBlock(blockA);
+        scheme.addBlock(blockB);
+        scheme.addBlock(blockD);
+
+        blockA.getInputPort(0).setConnectedPort(blockB.getOutputPort(0));
+        blockA.getInputPort(1).setValue("float", 2);
+        
+        blockB.getInputPort(0).setConnectedPort(blockC.getOutputPort(0));
+        blockB.getInputPort(1).setValue("float", 10);
+        
+        blockC.getInputPort(0).setValue("float", 3);
+        blockC.getInputPort(1).setConnectedPort(blockD.getOutputPort(0));
+        
+        blockD.getInputPort(0).setValue("float", 10);
+        blockD.getInputPort(1).setValue("float", 2);
+
+        Assert.assertEquals(Double.NaN, blockA.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(Double.NaN, blockB.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(Double.NaN, blockC.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(Double.NaN, blockD.getOutputPort(0).getValue("float"), 0.02);
+        
+        Assert.assertTrue(scheme.runStep());
+        Assert.assertEquals(Double.NaN, blockA.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(Double.NaN, blockB.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(Double.NaN, blockC.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(5, blockD.getOutputPort(0).getValue("float"), 0.02);
+        
+        Assert.assertTrue(scheme.runStep());
+        Assert.assertEquals(Double.NaN, blockA.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(Double.NaN, blockB.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(15, blockC.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(5, blockD.getOutputPort(0).getValue("float"), 0.02);
+        
+        Assert.assertTrue(scheme.runStep());
+        Assert.assertEquals(Double.NaN, blockA.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(5, blockB.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(15, blockC.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(5, blockD.getOutputPort(0).getValue("float"), 0.02);
+        
+        Assert.assertTrue(scheme.runStep());
+        Assert.assertEquals(7, blockA.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(5, blockB.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(15, blockC.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(5, blockD.getOutputPort(0).getValue("float"), 0.02);
+        
+        Assert.assertFalse(scheme.runStep());  
+    }        
 }
