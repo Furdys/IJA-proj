@@ -285,8 +285,13 @@ public class Scheme implements Serializable
         return block;
     }
     
-    public ArrayList<Block> getBlocks()
+    public ArrayList<Block> getBlocks() // For testing SchemeFile
     {
         return this.blocks;
+    }
+    
+    public boolean isReadOnly() 
+    {
+        return this.readOnly;
     }
 }

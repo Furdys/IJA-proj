@@ -254,43 +254,4 @@ public class SchemeTest {
         
         Assert.assertFalse(scheme.runStep());  
     }        
-    
-    @Test
-    public void test_file()
-    {
-        blockA = new BlockAdd();
-        blockB = new BlockSub();
-        blockC = new BlockMul();
-        blockD = new BlockDiv();
-        
-        scheme = new Scheme("Test");
-        scheme.addBlock(blockA);
-        scheme.addBlock(blockB);
-        scheme.addBlock(blockC);
-        scheme.addBlock(blockD);
-
-        blockA.getInputPort(0).setConnectedPort(blockB.getOutputPort(0));
-        blockA.getInputPort(1).setValue("float", 2);
-        
-        blockB.getInputPort(0).setConnectedPort(blockC.getOutputPort(0));
-        blockB.getInputPort(1).setValue("float", 10);
-        
-        blockC.getInputPort(0).setValue("float", 3);
-        blockC.getInputPort(1).setConnectedPort(blockD.getOutputPort(0));
-        
-        blockD.getInputPort(0).setValue("float", 10);
-        blockD.getInputPort(1).setValue("float", 2);
-        
-        scheme = SchemeFile.firstTest(scheme);
-        
-        Assert.assertTrue(scheme.run());
-        
-        for(Block block : scheme.getBlocks())
-        {
-            if(block instanceof BlockAdd)
-                Assert.assertEquals(7, block.getOutputPort(0).getValue("float"), 0.02);
-        }
-        
-        
-    }
 }

@@ -8,40 +8,75 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class SchemeFile {
+abstract public class SchemeFile
+{
+    static public boolean save(Scheme scheme, String path)
+    {
+        if(scheme == null)
+        {
+            System.err.println("SchemeFile.save(): Scheme is null");
+            return false;
+        }
+        if(scheme.isReadOnly())
+        {
+            System.err.println("SchemeFile.save(): Scheme is in read only mode (it is already executed or in middle of execution)");
+            return false;
+        }
+        
+        try
+        {
+            FileOutputStream fileStream = new FileOutputStream(new File(path));
+            ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);  
+            
+            objectStream.writeObject(scheme);
 
-	static public Scheme firstTest(Scheme scheme) {
-		try {
-			FileOutputStream f = new FileOutputStream(new File("myObjects.txt"));
-			ObjectOutputStream o = new ObjectOutputStream(f);
-
-			// Write objects to file
-			o.writeObject(scheme);
-
-			o.close();
-			f.close();
-
-			FileInputStream fi = new FileInputStream(new File("myObjects.txt"));
-			ObjectInputStream oi = new ObjectInputStream(fi);
-
-			// Read objects
-			Scheme returnScheme = (Scheme) oi.readObject();
-
-			oi.close();
-			fi.close();
-                        
-                        return returnScheme;
-
-		} catch (FileNotFoundException e) {
-			System.err.println("File not found");
-		} catch (IOException e) {
-			System.err.println("Error initializing stream");
-                        System.err.println(e);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            objectStream.close();
+            fileStream.close();
+        }
+        catch(FileNotFoundException ex)
+        {
+            System.err.println("SchemeFile.save(): File not found");
+            return false;  
+        }
+        catch (IOException ex)
+        {
+            System.err.println("SchemeFile.save(): IOException");
+            return false;
+        }
+        
+        return true;
+    }
+    
+    static public Scheme open(String path)
+    {
+        Scheme loadedScheme;
+                
+        try
+        {
+            FileInputStream fileStream = new FileInputStream(new File(path));
+            ObjectInputStream objectStream = new ObjectInputStream(fileStream);  
+            
+            loadedScheme = (Scheme) objectStream.readObject();
+            
+            objectStream.close();
+            fileStream.close();
+        }
+        catch (FileNotFoundException ex)
+        {
+            System.err.println("SchemeFile.open(): File not found");
+            return null;  
+        }
+        catch (IOException ex)
+        {
+            System.err.println("SchemeFile.open(): IOException");
             return null;
-	}
-
+        }
+        catch (ClassNotFoundException ex)
+        {
+            System.err.println("SchemeFile.open(): Unexpected content of file");
+            return null;
+        }  
+        
+        return loadedScheme;
+    }
 }

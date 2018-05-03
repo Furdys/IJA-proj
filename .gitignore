@@ -4,3 +4,5 @@ manifest.mf
 build/
 ignore/
 build.xml
+*.scheme
+!/examples/*.scheme
