@@ -32,6 +32,7 @@ public class SchemeTest {
     @Before
     public void setUp()
     {
+    //    System.err.println("----------------------------"); 
     }
     
     @After
@@ -90,7 +91,7 @@ public class SchemeTest {
         blockC.getInputPort(0).setValue("float", 4);
         blockC.getInputPort(1).setConnectedPort(blockB.getOutputPort(0));
         
-        scheme.run();
+        Assert.assertTrue(scheme.run());
         
         Assert.assertEquals(10, blockC.getOutputPort(0).getValue("float"), 0.02);
     }    
@@ -138,7 +139,7 @@ public class SchemeTest {
         blockG.getInputPort(0).setValue("float", 1);  
         blockG.getInputPort(1).setValue("float", 2);
         
-        scheme.run();
+        Assert.assertTrue(scheme.run());
         
         Assert.assertEquals(2, blockG.getOutputPort(0).getValue("float"), 0.02);
         Assert.assertEquals(-1, blockF.getOutputPort(0).getValue("float"), 0.02);
@@ -147,5 +148,24 @@ public class SchemeTest {
         Assert.assertEquals(-8, blockC.getOutputPort(0).getValue("float"), 0.02);
         Assert.assertEquals(-6.25, blockB.getOutputPort(0).getValue("float"), 0.02);
         Assert.assertEquals(-14.25, blockA.getOutputPort(0).getValue("float"), 0.02);
-    }      
+    }
+    
+    @Test 
+    public void test_run_loop() 
+    { 
+        scheme = new Scheme(); 
+        blockA = new BlockAdd(); 
+        blockB = new BlockSub(); 
+         
+        scheme.addBlock(blockA); 
+        scheme.addBlock(blockB);  
+         
+        blockA.getInputPort(0).setConnectedPort(blockB.getOutputPort(0)); 
+        blockA.getInputPort(1).setValue("float", 1);   
+         
+        blockB.getInputPort(0).setConnectedPort(blockA.getOutputPort(0)); 
+        blockB.getInputPort(1).setValue("float", 2);  
+         
+        Assert.assertFalse(scheme.run()); 
+    } 
 }

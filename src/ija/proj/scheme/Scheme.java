@@ -8,6 +8,13 @@ public class Scheme
     private String name;
     private ArrayList<Block> blocks = new ArrayList<Block>();
     private ArrayList<Block> notExecutedBlocks = new ArrayList<Block>();
+    private ArrayList<Block> loopDetectionTrace = new ArrayList<Block>();
+    
+    private Block loopDetected = new BlockAdd();    // Pseudo block beacuse fuck Java
+    
+    public Scheme()
+    {
+    }
     
     /**
      * @brief Adds block to scheme blocks list
@@ -38,7 +45,7 @@ public class Scheme
     /**
      * @brief Runs the calucation of scheme
      */
-    public void run()
+    public boolean run()
     {
         // --- Get user input to not connected ports ---
         this.searchUserDependentBlocks();
@@ -54,11 +61,17 @@ public class Scheme
         {
             // -- None block is expected to be next --
             if(expectedNextBlock == null)
-                expectedNextBlock = this.notExecutedBlocks.get(0);
+                expectedNextBlock = this.notExecutedBlocks.get(0);  // Get first block in execution queqe
             
             // -- Do one step --
             expectedNextBlock = this.step(expectedNextBlock);
+            
+            // -- Check loop detection --
+            if(expectedNextBlock == this.loopDetected)
+                return false;
         }
+        
+        return true;
     }
     
     /**
@@ -70,6 +83,9 @@ public class Scheme
     {
         // --- Find block that can be executed ---
         Block realNextBlock = findNonDependentBlock(expectedNextBlock);
+        
+        if(realNextBlock == this.loopDetected)
+            return this.loopDetected;
         
         // --- Execute block ---
         realNextBlock.execute();
@@ -111,14 +127,37 @@ public class Scheme
             }      
         }
     }
+
+    /**
+     * @brief Search first non-dependent block in specified blocks ancestors
+     * @param block Block from where to start search
+     * @todo Not sure what happens when there is nowhere to continue search
+     * @return
+     */      
+    public Block findNonDependentBlock(Block block)
+    {
+        this.loopDetectionTrace.clear();
+        
+        // --- Actual search ---
+        return this.findNonDependentBlock_private(block);
+    }
     
     /**
      * @brief Search first non-dependent block in specified blocks ancestors
      * @param block Block from where to start search
      * @todo Not sure what happens when there is nowhere to continue search
+     * @return
+     * 
+     * @warning DO NOT CALL THIS METHOD! Use Scheme.findNonDependentBlock() instead
      */    
-    public Block findNonDependentBlock(Block block)
+    private Block findNonDependentBlock_private(Block block)
     {
+        // --- Loop detection --- 
+        if(this.loopDetectionTrace.contains(block)) 
+            return this.loopDetected; 
+        else 
+            this.loopDetectionTrace.add(block);    
+        
         // --- Check if this block can be executed ---
         for(Port port : block.getInputPorts())    // For every input port
         {
@@ -130,13 +169,13 @@ public class Scheme
                 if(port.hasNaNValue())
                 {
                     // This should never happen, user must fill every non-connected port before start
-                    System.err.println("Scheme.findNonDependentBlock: Block is dependent on user input");
+                    System.err.println("Scheme.findNonDependentBlock_private: Block is dependent on user input");
                     //System.exit(1);   
                 }
                 else
                     continue;
             }
-            else
+            else    // Port is connected
             {
                 // --- Check for block with no value ---
                 if(connectedPort.getOwnerBlock().wasExecuted() == false)
@@ -145,7 +184,7 @@ public class Scheme
 
                     //this.dependentBlocks.add(block); @ todo Save visited blocks to reduce redundant search
 
-                    return this.findNonDependentBlock(connectedPort.getOwnerBlock()); // Use recursive call (ask if inputPort's block is depended)
+                    return this.findNonDependentBlock_private(connectedPort.getOwnerBlock()); // Use recursive call (ask if inputPort's block is depended)
                 }
             }
         }
