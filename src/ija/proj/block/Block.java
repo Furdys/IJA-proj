@@ -1,7 +1,18 @@
+/**
+ * Backend representation of block.
+ * @brief Package for Block
+ * @file Block.java
+ * @author Jiri Furda (xfurda00)
+ */
+
 package ija.proj.block;
 
 import java.io.Serializable;
 
+/**
+ * @brief The Block class is backend representation of block and contains its interface.
+ * This class is abstract and is parent of all the block types used.
+ */
 public abstract class Block implements Serializable
 {
     // --- Attributes ---
@@ -10,7 +21,11 @@ public abstract class Block implements Serializable
     private boolean executed = false;
 
     // --- Cunstructors ---
-    // Default one
+    /**
+     * @brief Main constructor for this class.
+     * @param in    Array of input Port objects.
+     * @param out   Array of output Port objects.
+     */
     Block(Port[] in, Port[] out)
     {
         this.inputPorts = in;
@@ -27,17 +42,31 @@ public abstract class Block implements Serializable
         }
     }
 
-    // Other possible combinations
+    /**
+     * @brief Secondary overloaded constructor for this class.
+     * @param in    Input Port object.
+     * @param out   Output Port object.
+     */
     Block(Port in, Port out)
     {
         this(new Port[]{in}, new Port[]{out});
     }
 
+    /**
+     * @brief Secondary overloaded constructor for this class.
+     * @param in    Array of input Port objects.
+     * @param out   Output Port object.
+     */    
     Block(Port[] in, Port out)
     {
         this(in, new Port[]{out});
     }
 
+    /**
+     * @brief Secondary overloaded constructor for this class.
+     * @param in    Array of input Port objects.
+     * @param out   Output Port object.
+     */    
     Block(Port in, Port[] out)
     {
         this(new Port[]{in}, out);
@@ -81,35 +110,60 @@ public abstract class Block implements Serializable
     void executeSpecific()
     {
         System.err.println("Block.executeSpecific(): Called non-overriden function");
-        //System.exit(1);
     }       
 
     // --- Setters and getters ---
+    /**
+     * @brief getInputPort is method returning input Port at specific index.
+     * @param index Index specifying required port.
+     * @return Input Port at specific index.
+     */
     public Port getInputPort(int index) 
     {
         return this.inputPorts[index];
     }  
-    
+
+    /**
+     * @brief getOutputPort is method returning output Port at specific index.
+     * @param index Index specifying required port.
+     * @return Output Port at specific index.
+     */    
     public Port getOutputPort(int index) 
     {
         return this.outputPorts[index];
     }   
-    
+
+    /**
+     * @brief getInputPorts is method returning array of all input Ports of this Block.
+     * @return Array of all input Ports of this Block.
+     */ 
     public Port[] getInputPorts() 
     {
         return this.inputPorts;
     }
 
+    /**
+     * @brief getOutputPorts is method returning array of all output Ports of this Block.
+     * @return Array of all output Ports of this Block.
+     */     
     public Port[] getOutputPorts() 
     {
             return this.outputPorts;
     }
     
+    /**
+     * @brief wasExecuted is method returning bool value indicating if the block was already executed.
+     * @return True if block was already executed, false if not
+     */
     public boolean wasExecuted() 
     {
         return this.executed;
     }
 
+    /**
+     * @brief printPorts is method used by GUI to print the block's Ports and it's values.
+     * @return String containing Ports informations formated as e.g. Input: \n [float] 42 \n\n Output: \n [float] 12
+     */
     public String printPorts()
     {
         String result = "Input:\n";
