@@ -215,13 +215,13 @@ public class Port implements Serializable
 
         for(String name : this.getNames())
         {
-            result.concat("["+name+"]");
+            result += "["+name+"]";
         }
 
         if(this.getConnectedPort() == null)
-            result.concat(" Not connected");
+            result += " Not connected";
         else
-            result.concat(" Connected");
+            result += " Connected";
     
         return result;  // [real][imaginary] Not connected
     }
@@ -238,12 +238,12 @@ public class Port implements Serializable
         for(String name : this.getNames())
         {
             if(!first)
-                result.concat(", ");
+                result += ", ";
             else
                 first = false;
 
-            result.concat("["+name+"] ");
-            result.concat(String.valueOf(this.getValue(name)));
+            result += "["+name+"] ";
+            result += String.valueOf(this.getValue(name));
         }
 
         return result;  // [real] 42, [imaginary] 78

@@ -169,13 +169,13 @@ public abstract class Block implements Serializable
         String result = "Input:\n";
         for(Port port : this.getInputPorts())
         {
-            result.concat(port.printConnection()+"\n");
+            result += port.printConnection()+"\n";
         }
 
-        result.concat("\nOutput:\n");
+        result += "\nOutput:\n";
         for(Port port : this.getOutputPorts())
         {
-            result.concat(port.printConnection()+"\n");
+            result += port.printConnection()+"\n";
         }
 
         return result.trim();    // Remove last \n
