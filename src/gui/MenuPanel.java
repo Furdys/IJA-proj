@@ -12,14 +12,14 @@ import javax.swing.JPanel;
 public class MenuPanel extends JPanel
 {
 	
-	JMenuBar menuBar;
+/*	JMenuBar menuBar;
 	JMenu menuCreate, menuRun, menuCreateLogic, menuCreateArithmetic;
 	JMenuItem itemArithmeticAdd, itemArithmeticSub, itemArithmeticMul, itemArithmeticDiv;
-	JMenuItem itemLogicAnd, itemLogicOr, itemLogicNot;
+	JMenuItem itemLogicAnd, itemLogicOr, itemLogicNot;*/
 	
 		public MenuPanel()
 		{
-			Dimension size = getPreferredSize();
+			/*Dimension size = getPreferredSize();
 			size.height = 20;
 			setPreferredSize(size);
 			
@@ -55,7 +55,7 @@ public class MenuPanel extends JPanel
 			gc.weightx = 0.5;
 			gc.weightx = 0.5;
 			gc.gridx = 0;
-			gc.gridy = 0;
+			gc.gridy = 0;*/
 
 			
 			
