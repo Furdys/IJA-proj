@@ -1,3 +1,11 @@
+/**
+ * ActionListener realizing moving blocks on the scene.
+ * @brief Package for DragListener.
+ * @file DragLisetner.java
+ * @author Peter Havan (xhavan00)
+ */
+
+
 package ija.proj.gui;
 
 import java.awt.*;

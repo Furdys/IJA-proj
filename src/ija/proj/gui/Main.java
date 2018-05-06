@@ -1,3 +1,10 @@
+/**
+ * Main class of the application.
+ * @brief Package for Main.
+ * @file Main.java
+ * @author Peter Havan (xhavan00)
+ */
+
 package ija.proj.gui;
 
 import javax.swing.JFrame;

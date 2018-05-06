@@ -1,3 +1,10 @@
+/**
+ * Main window containing frontend representation of scheme.
+ * @brief Package for MainFrame.
+ * @file MainFrame.java
+ * @author Peter Havan (xhavan00)
+ */
+
 package ija.proj.gui;
 
 import java.awt.BorderLayout;

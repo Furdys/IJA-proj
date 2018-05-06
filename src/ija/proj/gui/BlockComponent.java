@@ -1,3 +1,10 @@
+/**
+ * Frontend representation of block.
+ * @brief Package for BlockComponent.
+ * @file BlockComponent.java
+ * @author Peter Havan (xhavan00)
+ */
+
 package ija.proj.gui;
 
 import java.awt.Component;
