@@ -1,5 +1,5 @@
 #!/bin/sh
-rm -r xfurda00
+rm -r xfurda00 xfurda00.zip
 rm -r -f build/* doc/* dest-client/* dest-client/*
 
 mkdir xfurda00
