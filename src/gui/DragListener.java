@@ -52,16 +52,6 @@ public class DragListener extends MouseInputAdapter implements ActionListener
     	else
     	{
     		Component component = me.getComponent();
-    //		helper = component.getLocation(helper);
-    //		end = new Point2D.Double(helper.x, helper.y);
-    		//end.setLocation(helper.x, helper.y);
-    		
-    		/*System.out.println("pred draw()");
-    		graphics.draw(new Line2D.Double(start, end));
-    		System.out.println("pred paint() po draw()");
-    		current.paint(graphics);
-    		System.out.println("po point()");*/
-   
     		connecting = false;
     		
     		menu = new JPopupMenu("Connection");
@@ -136,18 +126,17 @@ public class DragListener extends MouseInputAdapter implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent me)
 	{
-		
-//	    helper = currentComponent.getLocation(helper);
-	//	start = new Point2D.Double(helper.x, helper.y);
-//	    start.setLocation(helper.x, helper.y);
+		MainFrame.start = new Point(currentComponent.getLocation());
 		
 		
 		Block block = null;
+		Component endComponent = null;
 		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
 		{
 			if (blockComponent.getComponent().equals(currentComponent))
 			{
 				block = blockComponent.getBlock();
+				endComponent = blockComponent.getComponent();
 				break;
 			}
 			
@@ -182,6 +171,7 @@ public class DragListener extends MouseInputAdapter implements ActionListener
 			double value = Double.parseDouble(s);
 			block.getInputPort(0).setValue("float", value);
 			System.out.println("setIn0\n");
+			MainFrame.end = new Point(endComponent.getLocation());
 		}
 		
 		else if (me.getSource().equals(setIn1))
@@ -211,28 +201,6 @@ public class DragListener extends MouseInputAdapter implements ActionListener
     	
         ToolTipManager.sharedInstance().setDismissDelay(60000);
     	
-/*		Block block = null;
-		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
-		{
-			if (blockComponent.getComponent().equals(currentComponent))
-			{
-				block = blockComponent.getBlock();
-				break;
-			}
-			
-		}*/
-		
-		/*if (block.getInputPort(0).getName())
-		
-    	infoBlock = new JLabel("Input port 0:" + block.getInputPort(0).getValue("float") + 
-    					"\nInput port 1:" + block.getInputPort(0).getValue("float") +
-    					""
-    						);*/
-		
-	/*	infoBlock = new JLabel(block.getInputPort(0).printConnection() +
-								block.getInputPort(1).printConnection() +
-								block.getOutputPort(0).printConnection());
-		me.getComponent().add(infoBlock);*/
     }
     
     public void mouseExited(MouseEvent me)

@@ -13,7 +13,7 @@ public class Main
 				{
 					public void run()
 					{
-						JFrame frame = new MainFrame("Hello World");
+						JFrame frame = new MainFrame("Scheme");
 					//	frame = new MainFrame("Hello World");
 						frame.setSize(500, 400);
 						frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

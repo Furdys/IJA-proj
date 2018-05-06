@@ -1,19 +1,28 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -22,9 +31,11 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
+import javax.swing.border.Border;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -53,6 +64,9 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 	private Scheme scheme;
 	private static ArrayList<BlockComponent> blockComponents;
 	private DragListener drag;
+	private static ArrayList<Point> locations;
+	public static Point start;
+	public static Point end;
 	
 	public MainFrame(String title)
 	{
@@ -60,7 +74,8 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		
 		//setLayout(new BorderLayout());
 		//setLayout(new GridBagLayout());
-		setLayout(new FlowLayout());
+		//setLayout(new FlowLayout());
+		setLayout(null);
 		
 /*		final JTextArea textArea = new JTextArea();
 		JButton button = new JButton("Click me!");*/
@@ -68,6 +83,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		this.scheme = new Scheme("tmp"); //TODO what names?
 		this.blockComponents = new ArrayList<BlockComponent>();
 		this.drag = new DragListener();
+		MainFrame.locations = new ArrayList<Point>();
 		
 		this.menuBar = new JMenuBar();
 		this.menuCreate = new JMenu("Create");
@@ -139,6 +155,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		
 		//Container c = getContentPane();
 		this.c = getContentPane();
+		
 		
 	}
 
@@ -235,7 +252,9 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		lbl.setIcon(blok);
 		
 		JPanel blockPanel = new JPanel();
-		blockPanel.setPreferredSize(new Dimension(256, 256));
+		//blockPanel.setPreferredSize(new Dimension(256, 270));
+		blockPanel.setSize(256,270);
+		blockPanel.setLocation(20,20);
 
 	//	DragListener drag = new DragListener();
 		
@@ -260,6 +279,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		this.c.revalidate();
 		
 		this.scheme.addBlock(block);
+
 		//this.blockComponents.add(new BlockComponent(block, blockPanel));
 		
 		
@@ -299,6 +319,78 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		return blockComponents;
 	}
 	
+	public static double fillValues(Block block, Port port)
+	{
+		Component component = null;
+		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
+		{
+			if (blockComponent.getBlock().equals(block))
+			{
+				component = blockComponent.getComponent();
+				break;
+			}
+		}
+		
+		MainFrame.savePosition();
+		Border border = BorderFactory.createLineBorder(Color.RED,10);
+		((JComponent) component).setBorder(border);;
+		MainFrame.fixPosition();
+		String s = (String)JOptionPane.showInputDialog(
+                component.getParent(),
+                "Set inputPort",
+                null, JOptionPane.PLAIN_MESSAGE,
+                null, null, null);
+		
+
+		double value = Double.parseDouble(s);
+		((JComponent) component).setBorder(BorderFactory.createEmptyBorder());
+		MainFrame.fixPosition();
+		return value;
+				
+
+
+	}
 	
+	public static ArrayList<Point> getLocations()
+	{
+		return locations;
+	}
+
+	
+	public static void savePosition()
+	{
+		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
+		{
+			locations.add(new Point(blockComponent.getComponent().getX(), blockComponent.getComponent().getY()));
+		}
+	}
+	
+	public static void fixPosition()
+	{
+		
+		Iterator<BlockComponent> blockComponent = MainFrame.getBlockComponents().iterator();
+		Iterator<Point> point = MainFrame.getLocations().iterator();
+
+		while (blockComponent.hasNext() && point.hasNext()) 
+		{
+		    blockComponent.next().getComponent().setLocation(point.next());
+		}
+		
+	/*	for (Point point, BlockComponent blockComponent : MainFrame.getLocations(), MainFrame.getBlockComponents())
+		{
+			
+			
+		}*/
+		
+		locations.clear();
+	}
+	
+/*	public void paint(Graphics g)
+	{
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.draw(new Line2D.Double(start.getX(), start.getY(), end.getX(), end.getY()));
+		
+		
+	}*/
 
 }
