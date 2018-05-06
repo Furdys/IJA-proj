@@ -1,3 +1,10 @@
+/**
+ * Backend interface for saving and loading scheme to file.
+ * @brief Package for SchemeFile
+ * @file SchemeFile.java
+ * @author Jiri Furda (xfurda00)
+ */
+
 package ija.proj.scheme;
 
 import java.io.File;
@@ -8,8 +15,17 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * @brief The Scheme class is abstract clas providing saving and loading scheme to file.
+ */
 abstract public class SchemeFile
 {
+    /**
+     * @brief save is static method saving scheme to specified file.
+     * @param scheme Scheme to be saved.
+     * @param path Path to where should Scheme be saved.
+     * @return True when successful, false when not
+     */
     static public boolean save(Scheme scheme, String path)
     {
         if(scheme == null)
@@ -46,7 +62,12 @@ abstract public class SchemeFile
         
         return true;
     }
-    
+
+    /**
+     * @brief open is static method loading scheme from specified file.
+     * @param path Path to where Scheme is saved.
+     * @return Loaded Scheme when successful, null when not.
+     */    
     static public Scheme open(String path)
     {
         Scheme loadedScheme;
