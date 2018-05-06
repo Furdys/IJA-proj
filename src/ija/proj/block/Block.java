@@ -166,16 +166,16 @@ public abstract class Block implements Serializable
      */
     public String printPorts()
     {
-        String result = "Input:\n";
+        String result = "<html>Input:<br>";
         for(Port port : this.getInputPorts())
         {
-            result += port.printConnection()+"\n";
+            result += port.printConnection()+"<br>";
         }
 
         result += "\nOutput:\n";
         for(Port port : this.getOutputPorts())
         {
-            result += port.printConnection()+"\n";
+            result += port.printConnection()+"<br><html>";
         }
 
         return result.trim();    // Remove last \n

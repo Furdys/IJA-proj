@@ -11,6 +11,8 @@ import ija.proj.block.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import ija.proj.gui.MainFrame;
+
 
 /**
  * @brief The Scheme class is backend representation of scheme and contains its interface.
@@ -237,8 +239,8 @@ public class Scheme implements Serializable
                        if(Double.isNaN(port.getValue(name)))    // If value not set
                        {
                            // @todo user input dialog
-                           System.err.println("Scheme.searchUserDependentBlocks: @todo user input dialog");
-                           port.setValue(name, 420);
+                           //System.err.println("Scheme.searchUserDependentBlocks: @todo user input dialog");
+                           port.setValue(name, MainFrame.fillValues(block, port, name));
                        }                        
                    }
                }
