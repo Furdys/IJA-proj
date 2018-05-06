@@ -76,16 +76,12 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
     		connecting = false;
     		Component component = me.getComponent();
     		menu = new JPopupMenu("Connection");
-    //		in0 = new JMenuItem("Connect inputPort 0");
-    //		in1 = new JMenuItem("Connect inputPort 1");
+
     		out0 = new JMenuItem("Connect outputPort 1");
     		
-   // 		in0.addActionListener(this);
-   // 		in1.addActionListener(this);
+ 
     		out0.addActionListener(this);
-    		
-   // 		menu.add(in0);
-   // 		menu.add(in1);
+
     		menu.add(out0);
     		
     		currentComponent = me.getComponent();
@@ -101,7 +97,6 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 
     		menu.show(component, me.getX(), me.getY());
     		
-            //menu.show(component, component.getWidth()/2, component.getHeight()/2);
     		
     	}
     }
@@ -182,7 +177,7 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 					Object[] possibilities = {"False", "True"};
 					String s = (String)JOptionPane.showInputDialog(
 										currentComponent.getParent(),
-										"Set inputPort 0 [" + name + "]",
+										"Set inputPort 1 [" + name + "]",
 					                    "Choose:",
 					                    JOptionPane.PLAIN_MESSAGE,
 					                    null,
@@ -250,12 +245,6 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 		}
 		// TODO Auto-generated method stub
 		
-	/*	((JComponent) currentComponent).setToolTipText("<html>"
-				+"Input port 0 = " + block.getInputPort(0).getValue("float") 
-				+"<br>"
-				+"Input port 1 = " + block.getInputPort(1).getValue("float") 
-				+"<br>"
-				+"Output port 0 = " + block.getOutputPort(0).getValue("float"));*/
 		
 		((JComponent) currentComponent).setToolTipText(block.printPorts());
 

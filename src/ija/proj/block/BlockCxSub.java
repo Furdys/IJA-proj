@@ -1,8 +1,19 @@
+/**
+ * Backend representation of "CxSub" block.
+ * @brief Package for Block type "CxSub" from group "Complex arithmetic"
+ * @file BlockCxSub.java
+ * @author Jiri Furda (xfurda00)
+ */
+
 package ija.proj.block;
 
+
+/**
+ * @brief The BlockCxSub class is Block substracting two complex numbers
+ */
 public class BlockCxSub extends BlockComplex
 {
-    void executeSpecific() 
+    void executeSpecific()  /// @brief executeSpecific substracts two complex values from input Ports and saves it to output Port
     {
         for(String name : new String[]{"real","imaginary"})
         {
