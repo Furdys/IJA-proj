@@ -1,9 +1,11 @@
-package gui;
+package ija.proj.gui;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -19,7 +21,7 @@ import ija.proj.block.Port;
 import ija.proj.block.Block;
 import ija.proj.scheme.Scheme;
 
-public class DragListener extends MouseInputAdapter implements ActionListener
+public class DragListener extends MouseInputAdapter implements ActionListener, Serializable
 {
     private Point location;
     private MouseEvent pressed;
@@ -28,8 +30,6 @@ public class DragListener extends MouseInputAdapter implements ActionListener
     private JPopupMenu menu;
     private Graphics2D graphics;
     private Point helper; // for getLocation()
-    private Point2D start;
-    private Point2D end;
     private Component currentComponent;
     private Block currentBlock;
     private boolean connecting = false;
@@ -126,7 +126,6 @@ public class DragListener extends MouseInputAdapter implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent me)
 	{
-		MainFrame.start = new Point(currentComponent.getLocation());
 		
 		
 		Block block = null;
@@ -163,36 +162,102 @@ public class DragListener extends MouseInputAdapter implements ActionListener
 		
 		if (me.getSource().equals(setIn0))
 		{	
-			String s = (String)JOptionPane.showInputDialog(
-			                    currentComponent.getParent(),
-			                    "Set inputPort 0",
-			                    null, JOptionPane.PLAIN_MESSAGE,
-			                    null, null, null);
-			double value = Double.parseDouble(s);
-			block.getInputPort(0).setValue("float", value);
-			System.out.println("setIn0\n");
-			MainFrame.end = new Point(endComponent.getLocation());
+			
+			Set<String> names = block.getInputPort(0).getNames();
+			for (String name : names)
+			{
+				if (name == "float" || name == "real" || name == "imaginary")
+				{
+					String s = (String)JOptionPane.showInputDialog(
+					                    currentComponent.getParent(),
+					                    "Set inputPort 0 [" + name + "]",
+					                    null, JOptionPane.PLAIN_MESSAGE,
+					                    null, null, null);
+					double value = Double.parseDouble(s);
+					block.getInputPort(0).setValue("float", value);
+				}
+				
+				else if (name == "bool")
+				{
+					Object[] possibilities = {"False", "True"};
+					String s = (String)JOptionPane.showInputDialog(
+										currentComponent.getParent(),
+										"Set inputPort 0 [" + name + "]",
+					                    "Choose:",
+					                    JOptionPane.PLAIN_MESSAGE,
+					                    null,
+					                    possibilities,
+					                    "True");
+					if (s == "False")
+					{
+						block.getInputPort(0).setValue("bool", 0.0);				
+					}
+					
+					if (s == "False")
+					{
+						block.getInputPort(0).setValue("bool", 1.0);					
+					}
+					
+				}
+				System.out.println("setIn0\n");
+
+			
+			}
 		}
 		
 		else if (me.getSource().equals(setIn1))
 		{	
-			String s = (String)JOptionPane.showInputDialog(
-			                    currentComponent.getParent(),
-			                    "Set inputPort 0",
-			                    null, JOptionPane.PLAIN_MESSAGE,
-			                    null, null, null);
-			double value = Double.parseDouble(s);
-			block.getInputPort(1).setValue("float", value);
-			System.out.println("setIn1\n");
+			Set<String> names = block.getInputPort(0).getNames();
+			for (String name : names)
+			{
+				if (name == "float" || name == "real" || name == "imaginary")
+				{
+					String s = (String)JOptionPane.showInputDialog(
+					                    currentComponent.getParent(),
+					                    "Set inputPort 0 [" + name + "]",
+					                    null, JOptionPane.PLAIN_MESSAGE,
+					                    null, null, null);
+					double value = Double.parseDouble(s);
+					block.getInputPort(1).setValue("float", value);
+				}
+				
+				else if (name == "bool")
+				{
+					Object[] possibilities = {"False", "True"};
+					String s = (String)JOptionPane.showInputDialog(
+										currentComponent.getParent(),
+										"Set inputPort 0 [" + name + "]",
+					                    "Choose:",
+					                    JOptionPane.PLAIN_MESSAGE,
+					                    null,
+					                    possibilities,
+					                    "True");
+					if (s == "False")
+					{
+						block.getInputPort(1).setValue("bool", 0.0);				
+					}
+					
+					if (s == "False")
+					{
+						block.getInputPort(1).setValue("bool", 1.0);					
+					}
+					
+				}
+				System.out.println("setIn0\n");
+
+			
+			}
 		}
 		// TODO Auto-generated method stub
 		
-		((JComponent) currentComponent).setToolTipText("<html>"
+	/*	((JComponent) currentComponent).setToolTipText("<html>"
 				+"Input port 0 = " + block.getInputPort(0).getValue("float") 
 				+"<br>"
 				+"Input port 1 = " + block.getInputPort(1).getValue("float") 
 				+"<br>"
-				+"Output port 0 = " + block.getOutputPort(0).getValue("float"));
+				+"Output port 0 = " + block.getOutputPort(0).getValue("float"));*/
+		
+		((JComponent) currentComponent).setToolTipText(block.printPorts());
 
 	}
 	

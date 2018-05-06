@@ -1,3 +1,10 @@
+/**
+ * Backend representation of port.
+ * @brief Package for Port
+ * @file Port.java
+ * @author Jiri Furda (xfurda00)
+ */
+
 package ija.proj.block;
 
 import java.io.Serializable;
@@ -6,6 +13,9 @@ import java.util.Map;
 import java.util.Set;
 
 
+/**
+ * @brief The Port class is backend representation of port and contains its interface.
+ */
 public class Port implements Serializable
 {
     // --- Atributtes ---
@@ -15,10 +25,15 @@ public class Port implements Serializable
     private boolean type;
     
     // --- Constants ---
-    public static final boolean inputType = true;
-    public static final boolean outputType = false;
+    public static final boolean inputType = true;   // @brief Class constant representing Port that is input
+    public static final boolean outputType = false; // @brief Class constant representing Port that is output
     
     // --- Constructors ---
+    /**
+     * @brief Constructor of class Port with value type consisting of more than one part.
+     * @param names  Array of value type names.
+     * @param type  False for output, true for input.
+     */
     public Port(String[] names, boolean type)
     {
         this.type = type;
@@ -30,16 +45,21 @@ public class Port implements Serializable
             this.content.put(name, Double.NaN);
         }
     }
-    
+
+    /**
+     * @brief Constructor of class Port with value type consisting of only one part.
+     * @param name  Value type name.
+     * @param type  False for output, true for input.
+     */    
     public Port(String name, boolean type)
     {
         this(new String[]{name}, type);
     } 
 
     /**
-     * @brief Checks if two Ports have compatibile type for connection
-     * @param other Other Port for connection
-     * @return True if compatibile or false if not
+     * @brief compatible is method determining if this and other Port are compatibile for connection.
+     * @param other Port to connect to.
+     * @return True when compatibile, false when not.
      */
     public boolean compatibile(Port other)
     {
@@ -48,10 +68,10 @@ public class Port implements Serializable
     }
 
     /**
-     * @brief Set one Port type value
-     * @param name Name of value to be changed
-     * @param value New value
-     * @return True if successful or false if name is not found 
+     * @brief setValue is method used to set value with specified name of the Port.
+     * @param name Name of value type to be set.
+     * @param value Value to be set.
+     * @return True when successful, false when not.
      */
     public boolean setValue(String name, double value)     
     {
@@ -71,7 +91,12 @@ public class Port implements Serializable
         
         return true;
     }
-    
+
+    /**
+     * @brief getValue is method used to get value with specified name of the Port.
+     * @param name  Name of desired value type.
+     * @return  Desired value.
+     */    
     public double getValue(String name)     
     {
         // --- Check if name is present in this Port ---
@@ -85,8 +110,8 @@ public class Port implements Serializable
     }
     
     /**
-     * @brief Check if port has missing value
-     * @return true if any value equals Double.NaN, false if every value is legit
+     * @brief hasNaNvalue checks if port has any missing value
+     * @return True if any value equals Double.NaN, false if every value is legit
      */
     public boolean hasNaNValue()
     {
@@ -98,26 +123,29 @@ public class Port implements Serializable
         return false;
     }
 
+    /**
+     * @brief getValue is method used to get map of both value and its name with specified name of the Port.
+     * @return  Map of values and names of this Port.
+     */
     public Map<String, Double> getContent()     
     {
         return this.content;
     }  
 
     /**
-     * @brief Get set of Port type names
-     * @return Set of Port type names
+     * @brief getNames is method used to get vector of value type names of this Port
+     * @return Vector of value type names of this Port
      */
     public Set<String> getNames()
     {
         return this.content.keySet();
     }
-    
-    public String getName()
-    {
-        // Temporary
-        return this.content.keySet().toArray()[0].toString();
-    }
 
+    /**    
+     * @brief setConnectedPort is method used to set connected Port to this Port
+     * @param other Other Port this Ports is connected to
+     * @return True when successful, false when not
+     */
     public boolean setConnectedPort(Port other)
     {
         // --- Check if port is empty ---
@@ -141,23 +169,84 @@ public class Port implements Serializable
         return true;
     }
 
+    /**
+     * @brief getConnectedPort is method returning pointer of Port connected to this Port
+     * @return Pointer of Port connected to this Port or NULL if none Port is connected
+     */    
     public Port getConnectedPort()
     {
         return this.connectedPort;
     }	
     
+    /**
+     * @brief getOwnerBlock is method returting pointer of Block that owns this Port
+     * @return Pointer of Block that owns this Port
+     */    
     public Block getOwnerBlock()
     {
         return this.ownerBlock;
     }	
-    
+
+    /**
+     * @brief setOwnerBlock is method that sets owner Block of this Port
+     * @param otherBlock Pointer of owner Block
+     */    
     public void setOwnerBlock(Block ownerBlock)
     {
         this.ownerBlock = ownerBlock;
     }	
     
+    /**
+     * @brief getType determines type of the Port
+     * @return Port.inputType if Port is input or Port.outputType if Port is output
+     */
     public boolean getType()
     {
         return this.type;
     }	
+
+    /**
+     * @brief print is method used by GUI to get informations about this Port
+     * @return String containing informations about this Port
+     */    
+    public String print()
+    {
+        String result = "";
+
+        for(String name : this.getNames())
+        {
+            result += "["+name+"]";
+        }
+
+        if(this.getConnectedPort() == null)
+            result += " Not connected";
+        else
+            result += " Connected";
+    
+        return result;  // [real][imaginary] Not connected
+    }
+
+    /**
+     * @brief printConnection is method used by GUI to get informations and value about connection of Port
+     * @return String containing informations and value about connection of Port
+     */    
+    public String printConnection()
+    {
+        String result = "";
+        boolean first = true; // Don't insert comma at beginning
+
+        for(String name : this.getNames())
+        {
+            if(!first)
+                result += ", ";
+            else
+                first = false;
+
+            result += "["+name+"] ";
+            result += String.valueOf(this.getValue(name));
+        }
+
+        return result;  // [real] 42, [imaginary] 78
+    }
 }
+

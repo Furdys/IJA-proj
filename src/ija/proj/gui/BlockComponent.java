@@ -1,6 +1,7 @@
-package gui;
+package ija.proj.gui;
 
 import java.awt.Component;
+import java.io.Serializable;
 
 import javax.swing.JComponent;
 import ija.proj.*;
@@ -9,7 +10,7 @@ import ija.proj.block.Block;
 
 
 
-public class BlockComponent
+public class BlockComponent implements Serializable
 {
 	private static int createdBlocks = 0;
 	private static int existingBlocks = 0;
@@ -45,7 +46,7 @@ public class BlockComponent
 		this.component = component;
 	}
 	
-	public void updateTip()
+/*	public void updateTip()
 	{
 		((JComponent) component).setToolTipText("<html>"
 				+"Input port 0:" + block.getInputPort(0).getValue("float") 
@@ -53,6 +54,5 @@ public class BlockComponent
 				+"Input port 1:" + block.getInputPort(0).getValue("float") 
 				+"<br>"
 				+"Output port 0:" + block.getOutputPort(0).getValue("float"));
-	}
-
+	}*/
 }

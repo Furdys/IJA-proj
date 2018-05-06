@@ -1,4 +1,4 @@
-package gui;
+package ija.proj.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,8 +18,10 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -44,7 +46,7 @@ import ija.proj.scheme.Scheme;
 
 
 
-public class MainFrame extends JFrame implements MenuListener, ActionListener, KeyListener
+public class MainFrame extends JFrame implements MenuListener, ActionListener, KeyListener, Serializable
 {
 	
 	private JMenuBar menuBar;
@@ -65,8 +67,6 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 	private static ArrayList<BlockComponent> blockComponents;
 	private DragListener drag;
 	private static ArrayList<Point> locations;
-	public static Point start;
-	public static Point end;
 	
 	public MainFrame(String title)
 	{
@@ -98,13 +98,14 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 				System.out.println("After run");
 				for (BlockComponent blockComponent : MainFrame.blockComponents)
 				{
-					((JComponent) blockComponent.getComponent()).setToolTipText("<html>"
+					((JComponent) blockComponent.getComponent()).setToolTipText(blockComponent.getBlock().printPorts());
+					/*((JComponent) blockComponent.getComponent()).setToolTipText("<html>"
 							+"Input port 0 = " + blockComponent.getBlock().getInputPort(0).getValue("float") 
 							+"<br>"
 							+"Input port 1 = " + blockComponent.getBlock().getInputPort(1).getValue("float") 
 							+"<br>"
 							+"Output port 0 = " + blockComponent.getBlock().getOutputPort(0).getValue("float")
-							+"<html>");
+							+"<html>");*/
 				}
 			}
 		});
@@ -218,18 +219,21 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		else if (e.getSource().equals(this.itemLogicAnd))
 		{
 			imageName = "blockLogicAnd.png";
+			block = new BlockAnd();
 			System.out.println("and\n");
 		}
 		
 		else if (e.getSource().equals(this.itemLogicNot))
 		{
 			imageName = "blockLogicNot.png";
+			block = new BlockXor();
 			System.out.println("not\n");
 		}
 		
 		else if (e.getSource().equals(this.itemLogicOr))
 		{
 			imageName = "blockLogicOr.png";
+			block = new BlockOr();
 			System.out.println("or\n");
 		}
 		
@@ -237,7 +241,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		this.img = null;
 		try
 		{
-			this.img = ImageIO.read(getClass().getResource("/gui/img/blocks/" + imageName));
+			this.img = ImageIO.read(getClass().getResource("/ija/proj/gui/img/blocks/" + imageName));
 		} catch (IOException f)
 		{
 			// TODO Auto-generated catch block
@@ -270,12 +274,14 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		
 		
 		
-		((JComponent) blockPanel).setToolTipText("<html>"
+	/*	((JComponent) blockPanel).setToolTipText("<html>"
 				+"Input port 0 = " + block.getInputPort(0).getValue("float") 
 				+"<br>"
 				+"Input port 1 = " + block.getInputPort(1).getValue("float") 
 				+"<br>"
-				+"Output port 0 = " + block.getOutputPort(0).getValue("float"));
+				+"Output port 0 = " + block.getOutputPort(0).getValue("float"));*/
+		((JComponent) blockPanel).setToolTipText(block.printPorts());
+		
 		this.c.revalidate();
 		
 		this.scheme.addBlock(block);
@@ -319,7 +325,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		return blockComponents;
 	}
 	
-	public static double fillValues(Block block, Port port)
+	public static double fillValues(Block block, Port port, String name)
 	{
 		Component component = null;
 		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
@@ -335,14 +341,52 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		Border border = BorderFactory.createLineBorder(Color.RED,10);
 		((JComponent) component).setBorder(border);;
 		MainFrame.fixPosition();
-		String s = (String)JOptionPane.showInputDialog(
+		
+		
+		double value = 0.0;
+			if (name == "float" || name == "real" || name == "imaginary")
+			{
+				String s = (String)JOptionPane.showInputDialog(
+				                    component.getParent(),
+				                    "Set inputPort 0 [" + name + "]",
+				                    null, JOptionPane.PLAIN_MESSAGE,
+				                    null, null, null);
+				value = Double.parseDouble(s);
+				block.getInputPort(0).setValue("float", value);
+			}
+			
+			else if (name == "bool")
+			{
+				Object[] possibilities = {"False", "True"};
+				String s = (String)JOptionPane.showInputDialog(
+									component.getParent(),
+									"Set inputPort 0 [" + name + "]",
+				                    "Choose:",
+				                    JOptionPane.PLAIN_MESSAGE,
+				                    null,
+				                    possibilities,
+				                    "True");
+				if (s == "False")
+				{
+					value = 0.0;			
+				}
+				
+				else if (s == "True")
+				{
+					value = 1.0;			
+				}
+				
+			}
+		
+		
+	/*	String s = (String)JOptionPane.showInputDialog(
                 component.getParent(),
                 "Set inputPort",
                 null, JOptionPane.PLAIN_MESSAGE,
-                null, null, null);
+                null, null, null);*/
 		
 
-		double value = Double.parseDouble(s);
+	//	double value = Double.parseDouble(s);
 		((JComponent) component).setBorder(BorderFactory.createEmptyBorder());
 		MainFrame.fixPosition();
 		return value;
@@ -376,21 +420,8 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		    blockComponent.next().getComponent().setLocation(point.next());
 		}
 		
-	/*	for (Point point, BlockComponent blockComponent : MainFrame.getLocations(), MainFrame.getBlockComponents())
-		{
-			
-			
-		}*/
-		
 		locations.clear();
 	}
 	
-/*	public void paint(Graphics g)
-	{
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.draw(new Line2D.Double(start.getX(), start.getY(), end.getX(), end.getY()));
-		
-		
-	}*/
 
 }
