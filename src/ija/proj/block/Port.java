@@ -160,4 +160,41 @@ public class Port implements Serializable
     {
         return this.type;
     }	
+    
+    public String print()
+    {
+        String result = "";
+
+        for(String name : this.getNames())
+        {
+            result.concat("["+name+"]");
+        }
+
+        if(this.getConnectedPort() == null)
+            result.concat(" Not connected");
+        else
+            result.concat(" Connected");
+    
+        return result;  // [real][imaginary] Not connected
+    }
+    
+    public String printConnection()
+    {
+        String result = "";
+        boolean first = true; // Don't insert comma at beginning
+
+        for(String name : this.getNames())
+        {
+            if(!first)
+                result.concat(", ");
+            else
+                first = false;
+
+            result.concat("["+name+"] ");
+            result.concat(String.valueOf(this.getValue(name)));
+        }
+
+        return result;  // [real] 42, [imaginary] 78
+    }
 }
+

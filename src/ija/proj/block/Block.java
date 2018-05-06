@@ -110,16 +110,20 @@ public abstract class Block implements Serializable
         return this.executed;
     }
 
-    /*  // Do we need those?
-    public void setInputPorts(Port[] in) 
+    public String printPorts()
     {
-            this.inputPorts = in;
+        String result = "Input:\n";
+        for(Port port : this.getInputPorts())
+        {
+            result.concat(port.printConnection()+"\n");
+        }
+
+        result.concat("\nOutput:\n");
+        for(Port port : this.getOutputPorts())
+        {
+            result.concat(port.printConnection()+"\n");
+        }
+
+        return result.trim();    // Remove last \n
     }
-
-
-    public void setOutputPorts(Port[] out) 
-    {
-            this.outputPorts = out;
-    }	
-    */
 }
