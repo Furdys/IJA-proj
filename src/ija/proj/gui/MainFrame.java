@@ -127,15 +127,22 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		
 		this.menuCreateArithmetic = new JMenu("Create arithmetic block");
 		this.menuCreateLogic = new JMenu("Create logic block");
+		this.menuCreateComplex = new JMenu("Create complex block");
 		
 		
 		this.menuCreate.add(menuCreateArithmetic);
 		this.menuCreate.add(menuCreateLogic);
+		this.menuCreate.add(menuCreateComplex);
 		
 		this.itemArithmeticAdd = new JMenuItem("Create Add block");
 		this.itemArithmeticSub = new JMenuItem("Create Sub block");
 		this.itemArithmeticMul = new JMenuItem("Create Mul block");
 		this.itemArithmeticDiv = new JMenuItem("Create Div block");
+		
+		this.itemComplexAdd = new JMenuItem("Create Add block");
+		this.itemComplexSub = new JMenuItem("Create Sub block");
+		this.itemComplexMul = new JMenuItem("Create Mul block");
+		this.itemComplexDiv = new JMenuItem("Create Div block");
 		
 		this.itemLogicAnd = new JMenuItem("Create And block");
 		this.itemLogicNot = new JMenuItem("Create Not block");
@@ -147,6 +154,11 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		this.itemArithmeticMul.addActionListener(this);
 		this.itemArithmeticDiv.addActionListener(this);
 		
+		this.itemComplexAdd.addActionListener(this);
+		this.itemComplexSub.addActionListener(this);
+		this.itemComplexMul.addActionListener(this);
+		this.itemComplexDiv.addActionListener(this);
+		
 		this.itemLogicAnd.addActionListener(this);
 		this.itemLogicNot.addActionListener(this);
 		this.itemLogicOr.addActionListener(this);
@@ -156,6 +168,11 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		this.menuCreateArithmetic.add(this.itemArithmeticSub);
 		this.menuCreateArithmetic.add(this.itemArithmeticMul);
 		this.menuCreateArithmetic.add(this.itemArithmeticDiv);
+		
+		this.menuCreateComplex.add(this.itemComplexAdd);
+		this.menuCreateComplex.add(this.itemComplexSub);
+		this.menuCreateComplex.add(this.itemComplexMul);
+		this.menuCreateComplex.add(this.itemComplexDiv);
 		
 		this.menuCreateLogic.add(this.itemLogicAnd);
 		this.menuCreateLogic.add(this.itemLogicNot);
@@ -244,6 +261,35 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 			imageName = "blockLogicOr.png";
 			block = new BlockOr();
 			System.out.println("or\n");
+		}
+		
+		else if (e.getSource().equals(this.itemComplexAdd))
+		{	
+			imageName = "blockCxAdd.png";
+			block = new BlockCxAdd();
+			System.out.println("add\n");
+		}
+		
+		else if (e.getSource().equals(this.itemComplexSub))
+		{
+			imageName = "blockCxSub.png";
+			block = new BlockCxSub();
+			System.out.println("sub\n");
+			
+		}
+		
+		else if (e.getSource().equals(this.itemComplexMul))
+		{
+			imageName = "blockCxMul.png";
+			block = new BlockCxMul();
+			System.out.println("mul\n");
+		}
+		
+		else if (e.getSource().equals(this.itemComplexDiv))
+		{
+			imageName = "blockCxDiv.png";
+			block = new BlockCxDiv();
+			System.out.println("div\n");
 		}
 		
 
