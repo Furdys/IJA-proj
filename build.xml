@@ -44,7 +44,7 @@
 		<mkdir dir="dest-client"/>
 		<jar destfile="dest-client/ija-client.jar" basedir="build">
 			<manifest>
-				<attribute name="Main-Class" value="gui.Main"/>
+				<attribute name="Main-Class" value="ija.proj.gui.Main"/>
 			</manifest>
 		</jar>
 	</target>
