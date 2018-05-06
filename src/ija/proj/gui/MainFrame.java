@@ -61,7 +61,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 	private JMenuItem itemArithmeticAdd, itemArithmeticSub, itemArithmeticMul, itemArithmeticDiv;
 	private JMenuItem itemComplexAdd, itemComplexSub, itemComplexMul, itemComplexDiv;
 	private JMenuItem itemLogicAnd, itemLogicOr, itemLogicNot;
-	private JMenuItem itemRun;
+	private JMenuItem itemRun, itemStep;
 
 	//private ImageIcon image1;
 	//private JLabel label1;
@@ -96,7 +96,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		this.menuCreate = new JMenu("Create");
 		this.menuRun = new JMenu("File");
 		
-		this.itemRun = new JMenuItem("run");
+		this.itemRun = new JMenuItem("Run");
 		
 		this.itemRun.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -106,17 +106,26 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 				for (BlockComponent blockComponent : MainFrame.blockComponents)
 				{
 					((JComponent) blockComponent.getComponent()).setToolTipText(blockComponent.getBlock().printPorts());
-					/*((JComponent) blockComponent.getComponent()).setToolTipText("<html>"
-							+"Input port 0 = " + blockComponent.getBlock().getInputPort(0).getValue("float") 
-							+"<br>"
-							+"Input port 1 = " + blockComponent.getBlock().getInputPort(1).getValue("float") 
-							+"<br>"
-							+"Output port 0 = " + blockComponent.getBlock().getOutputPort(0).getValue("float")
-							+"<html>");*/
 				}
 			}
 		});
-		menuRun.add(itemRun);
+		menuRun.add(itemRun);	
+		
+		
+		this.itemStep = new JMenuItem("Step");
+		this.itemStep.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Before run");
+				scheme.runStep();
+				System.out.println("After run");
+				for (BlockComponent blockComponent : MainFrame.blockComponents)
+				{
+					((JComponent) blockComponent.getComponent()).setToolTipText(blockComponent.getBlock().printPorts());
+				}
+			}
+		});
+		
+		menuRun.add(itemStep);
 		
 		
 		this.menuBar.add(this.menuRun);
@@ -355,7 +364,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 			{
 				String s = (String)JOptionPane.showInputDialog(
 				                    component.getParent(),
-				                    "Set inputPort 0 [" + name + "]",
+				                    "Set inputPort [" + name + "]",
 				                    null, JOptionPane.PLAIN_MESSAGE,
 				                    null, null, null);
 				value = Double.parseDouble(s);
@@ -367,7 +376,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 				Object[] possibilities = {"False", "True"};
 				String s = (String)JOptionPane.showInputDialog(
 									component.getParent(),
-									"Set inputPort 0 [" + name + "]",
+									"Set inputPort [" + name + "]",
 				                    "Choose:",
 				                    JOptionPane.PLAIN_MESSAGE,
 				                    null,
