@@ -6,3 +6,5 @@ ignore/
 build.xml
 *.scheme
 !/examples/*.scheme
+/dist/
+doc/
