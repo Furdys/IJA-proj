@@ -3,8 +3,10 @@ nbproject/
 manifest.mf
 build/
 ignore/
-build.xml
+build-ignore.xml
 *.scheme
 !/examples/*.scheme
 /dist/
 doc/
+dest-client/
+xfurda00.zip

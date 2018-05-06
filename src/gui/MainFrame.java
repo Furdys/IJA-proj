@@ -1,46 +1,72 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
+import javax.swing.border.Border;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+
+import ija.proj.block.*;
+import ija.proj.scheme.Scheme;
+
+
 
 public class MainFrame extends JFrame implements MenuListener, ActionListener, KeyListener
 {
 	
-	JMenuBar menuBar;
-	JMenu menuCreate, menuRun, menuCreateLogic, menuCreateArithmetic, menuCreateComplex;
-	JMenuItem itemArithmeticAdd, itemArithmeticSub, itemArithmeticMul, itemArithmeticDiv;
-	JMenuItem itemComplexAdd, itemComplexSub, itemComplexMul, itemComplexDiv;
-	JMenuItem itemLogicAnd, itemLogicOr, itemLogicNot;
+	private JMenuBar menuBar;
+	private JMenu menuCreate, menuRun, menuCreateLogic, menuCreateArithmetic, menuCreateComplex;
+	private JMenuItem itemArithmeticAdd, itemArithmeticSub, itemArithmeticMul, itemArithmeticDiv;
+	private JMenuItem itemComplexAdd, itemComplexSub, itemComplexMul, itemComplexDiv;
+	private JMenuItem itemLogicAnd, itemLogicOr, itemLogicNot;
+	private JMenuItem itemRun;
+
 	//private ImageIcon image1;
 	//private JLabel label1;
-	BufferedImage img;
+	private BufferedImage img;
 /*	ImageIcon blok;
 	JLabel lbl;
 	DragListener drag;*/
-	Container c;
+	private Container c;
+	private Scheme scheme;
+	private static ArrayList<BlockComponent> blockComponents;
+	private DragListener drag;
+	private static ArrayList<Point> locations;
+	public static Point start;
+	public static Point end;
 	
 	public MainFrame(String title)
 	{
@@ -48,58 +74,88 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		
 		//setLayout(new BorderLayout());
 		//setLayout(new GridBagLayout());
-		setLayout(new FlowLayout());
+		//setLayout(new FlowLayout());
+		setLayout(null);
 		
-		final JTextArea textArea = new JTextArea();
-		JButton button = new JButton("Click me!");
+/*		final JTextArea textArea = new JTextArea();
+		JButton button = new JButton("Click me!");*/
 		
-	
+		this.scheme = new Scheme("tmp"); //TODO what names?
+		this.blockComponents = new ArrayList<BlockComponent>();
+		this.drag = new DragListener();
+		MainFrame.locations = new ArrayList<Point>();
 		
-		menuBar = new JMenuBar();
-		menuCreate = new JMenu("Create");
-		menuRun = new JMenu("Run");
-		menuBar.add(menuCreate);
-		menuBar.add(menuRun);
+		this.menuBar = new JMenuBar();
+		this.menuCreate = new JMenu("Create");
+		this.menuRun = new JMenu("File");
 		
-		menuCreateLogic = new JMenu("Create logic block");
-		menuCreateArithmetic = new JMenu("Create arithmetic block");
+		this.itemRun = new JMenuItem("run");
 		
-		menuCreate.add(menuCreateLogic);
-		menuCreate.add(menuCreateArithmetic);
+		this.itemRun.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Before run");
+				scheme.run();
+				System.out.println("After run");
+				for (BlockComponent blockComponent : MainFrame.blockComponents)
+				{
+					((JComponent) blockComponent.getComponent()).setToolTipText("<html>"
+							+"Input port 0 = " + blockComponent.getBlock().getInputPort(0).getValue("float") 
+							+"<br>"
+							+"Input port 1 = " + blockComponent.getBlock().getInputPort(1).getValue("float") 
+							+"<br>"
+							+"Output port 0 = " + blockComponent.getBlock().getOutputPort(0).getValue("float")
+							+"<html>");
+				}
+			}
+		});
+		menuRun.add(itemRun);
 		
-		itemArithmeticAdd = new JMenuItem("Create Add block");
-		itemArithmeticSub = new JMenuItem("Create Sub block");
-		itemArithmeticMul = new JMenuItem("Create Mul block");
-		itemArithmeticDiv = new JMenuItem("Create Div block");
 		
-		itemLogicAnd = new JMenuItem("Create And block");
-		itemLogicNot = new JMenuItem("Create Not block");
-		itemLogicOr = new JMenuItem("Create Or block");
+		this.menuBar.add(this.menuRun);
+		this.menuBar.add(this.menuCreate);
+		
+		
+		this.menuCreateArithmetic = new JMenu("Create arithmetic block");
+		this.menuCreateLogic = new JMenu("Create logic block");
+		
+		
+		this.menuCreate.add(menuCreateArithmetic);
+		this.menuCreate.add(menuCreateLogic);
+		
+		this.itemArithmeticAdd = new JMenuItem("Create Add block");
+		this.itemArithmeticSub = new JMenuItem("Create Sub block");
+		this.itemArithmeticMul = new JMenuItem("Create Mul block");
+		this.itemArithmeticDiv = new JMenuItem("Create Div block");
+		
+		this.itemLogicAnd = new JMenuItem("Create And block");
+		this.itemLogicNot = new JMenuItem("Create Not block");
+		this.itemLogicOr = new JMenuItem("Create Or block");
 
 		
-		itemArithmeticAdd.addActionListener(this);
-		itemArithmeticSub.addActionListener(this);
-		itemArithmeticMul.addActionListener(this);
-		itemArithmeticDiv.addActionListener(this);
+		this.itemArithmeticAdd.addActionListener(this);
+		this.itemArithmeticSub.addActionListener(this);
+		this.itemArithmeticMul.addActionListener(this);
+		this.itemArithmeticDiv.addActionListener(this);
 		
-		itemLogicAnd.addActionListener(this);
-		itemLogicNot.addActionListener(this);
-		itemLogicOr.addActionListener(this);
+		this.itemLogicAnd.addActionListener(this);
+		this.itemLogicNot.addActionListener(this);
+		this.itemLogicOr.addActionListener(this);
 
 		
-		menuCreateArithmetic.add(itemArithmeticAdd);
-		menuCreateArithmetic.add(itemArithmeticSub);
-		menuCreateArithmetic.add(itemArithmeticMul);
-		menuCreateArithmetic.add(itemArithmeticDiv);
+		this.menuCreateArithmetic.add(this.itemArithmeticAdd);
+		this.menuCreateArithmetic.add(this.itemArithmeticSub);
+		this.menuCreateArithmetic.add(this.itemArithmeticMul);
+		this.menuCreateArithmetic.add(this.itemArithmeticDiv);
 		
-		menuCreateLogic.add(itemLogicAnd);
-		menuCreateLogic.add(itemLogicNot);
-		menuCreateLogic.add(itemLogicOr);
+		this.menuCreateLogic.add(this.itemLogicAnd);
+		this.menuCreateLogic.add(this.itemLogicNot);
+		this.menuCreateLogic.add(this.itemLogicOr);
 		
-		setJMenuBar(menuBar);
+		setJMenuBar(this.menuBar);
 		
 		//Container c = getContentPane();
-		c = getContentPane();
+		this.c = getContentPane();
+		
 		
 	}
 
@@ -129,53 +185,59 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 	{
 		
 		String imageName = "";
-		if (e.getSource().equals(itemArithmeticAdd))
+		Block block = null;
+		if (e.getSource().equals(this.itemArithmeticAdd))
 		{	
 			imageName = "blockArithmeticAdd.png";
+			block = new BlockAdd();
 			System.out.println("add\n");
 		}
 		
-		else if (e.getSource().equals(itemArithmeticSub))
+		else if (e.getSource().equals(this.itemArithmeticSub))
 		{
 			imageName = "blockArithmeticSub.png";
+			block = new BlockSub();
 			System.out.println("sub\n");
+			
 		}
 		
-		else if (e.getSource().equals(itemArithmeticMul))
+		else if (e.getSource().equals(this.itemArithmeticMul))
 		{
 			imageName = "blockArithmeticMul.png";
+			block = new BlockMul();
 			System.out.println("mul\n");
 		}
 		
-		else if (e.getSource().equals(itemArithmeticDiv))
+		else if (e.getSource().equals(this.itemArithmeticDiv))
 		{
 			imageName = "blockArithmeticDiv.png";
+			block = new BlockDiv();
 			System.out.println("div\n");
 		}
 		
-		else if (e.getSource().equals(itemLogicAnd))
+		else if (e.getSource().equals(this.itemLogicAnd))
 		{
 			imageName = "blockLogicAnd.png";
 			System.out.println("and\n");
 		}
 		
-		else if (e.getSource().equals(itemLogicNot))
+		else if (e.getSource().equals(this.itemLogicNot))
 		{
 			imageName = "blockLogicNot.png";
 			System.out.println("not\n");
 		}
 		
-		else if (e.getSource().equals(itemLogicOr))
+		else if (e.getSource().equals(this.itemLogicOr))
 		{
 			imageName = "blockLogicOr.png";
 			System.out.println("or\n");
 		}
 		
-		
-		img = null;
+
+		this.img = null;
 		try
 		{
-			img = ImageIO.read(getClass().getResource("/gui/img/blocks/" + imageName));
+			this.img = ImageIO.read(getClass().getResource("/gui/img/blocks/" + imageName));
 		} catch (IOException f)
 		{
 			// TODO Auto-generated catch block
@@ -185,41 +247,43 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		}
 		
 		
-		
-		
 		ImageIcon blok = new ImageIcon(img);
 		JLabel lbl = new JLabel();
 		lbl.setIcon(blok);
 		
 		JPanel blockPanel = new JPanel();
-		blockPanel.setPreferredSize(new Dimension(256, 256));
+		//blockPanel.setPreferredSize(new Dimension(256, 270));
+		blockPanel.setSize(256,270);
+		blockPanel.setLocation(20,20);
+
+	//	DragListener drag = new DragListener();
 		
-		
-		DragListener drag = new DragListener();
+		MainFrame.blockComponents.add(new BlockComponent(block, blockPanel));
 		
 		blockPanel.addMouseListener(drag);
 		blockPanel.addMouseMotionListener(drag);
-		
-		blockPanel.add(lbl);
-	//	Container c = getContentPane();
-		c.add(blockPanel);
-		
 
 		
+		blockPanel.add(lbl);
 		
-/*		DragListener drag = new DragListener();
-		lbl.addMouseListener( drag );
-		lbl.addMouseMotionListener( drag );*/
-		
-	
+		this.c.add(blockPanel);
 		
 		
 		
-	//	Container c = getContentPane();
+		((JComponent) blockPanel).setToolTipText("<html>"
+				+"Input port 0 = " + block.getInputPort(0).getValue("float") 
+				+"<br>"
+				+"Input port 1 = " + block.getInputPort(1).getValue("float") 
+				+"<br>"
+				+"Output port 0 = " + block.getOutputPort(0).getValue("float"));
+		this.c.revalidate();
 		
-		//c.add(lbl, BorderLayout.CENTER);
+		this.scheme.addBlock(block);
+
+		//this.blockComponents.add(new BlockComponent(block, blockPanel));
 		
-		c.revalidate();
+		
+
 
 		// TODO Auto-generated method stub
 		
@@ -249,5 +313,84 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		// TODO Auto-generated method stub
 		
 	}
+
+	public static ArrayList<BlockComponent> getBlockComponents()
+	{
+		return blockComponents;
+	}
+	
+	public static double fillValues(Block block, Port port)
+	{
+		Component component = null;
+		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
+		{
+			if (blockComponent.getBlock().equals(block))
+			{
+				component = blockComponent.getComponent();
+				break;
+			}
+		}
+		
+		MainFrame.savePosition();
+		Border border = BorderFactory.createLineBorder(Color.RED,10);
+		((JComponent) component).setBorder(border);;
+		MainFrame.fixPosition();
+		String s = (String)JOptionPane.showInputDialog(
+                component.getParent(),
+                "Set inputPort",
+                null, JOptionPane.PLAIN_MESSAGE,
+                null, null, null);
+		
+
+		double value = Double.parseDouble(s);
+		((JComponent) component).setBorder(BorderFactory.createEmptyBorder());
+		MainFrame.fixPosition();
+		return value;
+				
+
+
+	}
+	
+	public static ArrayList<Point> getLocations()
+	{
+		return locations;
+	}
+
+	
+	public static void savePosition()
+	{
+		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
+		{
+			locations.add(new Point(blockComponent.getComponent().getX(), blockComponent.getComponent().getY()));
+		}
+	}
+	
+	public static void fixPosition()
+	{
+		
+		Iterator<BlockComponent> blockComponent = MainFrame.getBlockComponents().iterator();
+		Iterator<Point> point = MainFrame.getLocations().iterator();
+
+		while (blockComponent.hasNext() && point.hasNext()) 
+		{
+		    blockComponent.next().getComponent().setLocation(point.next());
+		}
+		
+	/*	for (Point point, BlockComponent blockComponent : MainFrame.getLocations(), MainFrame.getBlockComponents())
+		{
+			
+			
+		}*/
+		
+		locations.clear();
+	}
+	
+/*	public void paint(Graphics g)
+	{
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.draw(new Line2D.Double(start.getX(), start.getY(), end.getX(), end.getY()));
+		
+		
+	}*/
 
 }

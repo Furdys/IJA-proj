@@ -56,7 +56,6 @@ public class SchemeTest {
         blockA = new BlockAdd();
         blockB = new BlockAdd();
         blockC = new BlockAdd();
-
         blockA.getInputPort(0).setValue("float", 5);
         blockA.getInputPort(1).setValue("float", 4);
         

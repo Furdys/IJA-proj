@@ -6,24 +6,36 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.event.MouseInputAdapter;
+
+import ija.proj.block.Port;
+import ija.proj.block.Block;
+import ija.proj.scheme.Scheme;
 
 public class DragListener extends MouseInputAdapter implements ActionListener
 {
-    Point location;
-    MouseEvent pressed;
-    boolean afterPressing = false;
-    JMenuItem in0, in1, out0;
-    JPopupMenu menu;
-    Graphics2D graphics;
-    Point helper; // for getLocation()
-    Point2D start;
-    Point2D end;
-    Component current;
-    boolean connecting = false;
+    private Point location;
+    private MouseEvent pressed;
+    private boolean afterPressing = false;
+    private JMenuItem in0, in1, out0, setIn0, setIn1;
+    private JPopupMenu menu;
+    private Graphics2D graphics;
+    private Point helper; // for getLocation()
+    private Point2D start;
+    private Point2D end;
+    private Component currentComponent;
+    private Block currentBlock;
+    private boolean connecting = false;
+    private Port currentPort;
+    private JLabel infoBlock;
+    private final int defaultDismissTimeout = ToolTipManager.sharedInstance().getDismissDelay();
  
     public void mousePressed(MouseEvent me)
     {
@@ -40,15 +52,22 @@ public class DragListener extends MouseInputAdapter implements ActionListener
     	else
     	{
     		Component component = me.getComponent();
-    		helper = component.getLocation(helper);
-    		end = new Point2D.Double(helper.x, helper.y);
-    		//end.setLocation(helper.x, helper.y);
-    		
-    		graphics.draw(new Line2D.Double(start, end));
-    		current.paint(graphics);
-    		
     		connecting = false;
     		
+    		menu = new JPopupMenu("Connection");
+    		in0 = new JMenuItem("Connect to inputPort 0");
+    		in1 = new JMenuItem("Connect to inputPort 1");
+    		
+    		in0.addActionListener(this);
+    		in1.addActionListener(this);
+    		
+    		menu.add(in0);
+    		menu.add(in1);
+    		
+    		currentComponent = me.getComponent();
+    		menu.show(component, me.getX(), me.getY());
+    		
+
     	}
     	
     	
@@ -57,22 +76,32 @@ public class DragListener extends MouseInputAdapter implements ActionListener
     		connecting = false;
     		Component component = me.getComponent();
     		menu = new JPopupMenu("Connection");
-    		in0 = new JMenuItem("Connect inputPort 0");
-    		in1 = new JMenuItem("Connect inputPort 1");
+    //		in0 = new JMenuItem("Connect inputPort 0");
+    //		in1 = new JMenuItem("Connect inputPort 1");
     		out0 = new JMenuItem("Connect outputPort 1");
     		
-    		in0.addActionListener(this);
-    		in1.addActionListener(this);
+   // 		in0.addActionListener(this);
+   // 		in1.addActionListener(this);
     		out0.addActionListener(this);
     		
-    		menu.add(in0);
-    		menu.add(in1);
+   // 		menu.add(in0);
+   // 		menu.add(in1);
     		menu.add(out0);
     		
-    		current = me.getComponent();
+    		currentComponent = me.getComponent();
     		
+    		setIn0 = new JMenuItem("Set inputPort 0");
+    		setIn1 = new JMenuItem("Set inputPort 1");
     		
-            menu.show(component, component.getWidth()/2, component.getHeight()/2);
+    		setIn0.addActionListener(this);
+    		setIn1.addActionListener(this);
+    		menu.add(setIn0);
+    		menu.add(setIn1);
+    		
+
+    		menu.show(component, me.getX(), me.getY());
+    		
+            //menu.show(component, component.getWidth()/2, component.getHeight()/2);
     		
     	}
     }
@@ -97,28 +126,86 @@ public class DragListener extends MouseInputAdapter implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent me)
 	{
+		MainFrame.start = new Point(currentComponent.getLocation());
 		
-	    helper = current.getLocation(helper);
-		start = new Point2D.Double(helper.x, helper.y);
-//	    start.setLocation(helper.x, helper.y);
-	  
+		
+		Block block = null;
+		Component endComponent = null;
+		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
+		{
+			if (blockComponent.getComponent().equals(currentComponent))
+			{
+				block = blockComponent.getBlock();
+				endComponent = blockComponent.getComponent();
+				break;
+			}
+			
+		}
+		
 		if (me.getSource().equals(in0))
 		{
-		    
+		    block.getInputPort(0).setConnectedPort(currentPort);
 			System.out.println("in0\n");
 		}
 		
 		else if (me.getSource().equals(in1))
 		{	
+		    block.getInputPort(1).setConnectedPort(currentPort);
 			System.out.println("in1\n");
 		}
 		
 		else if (me.getSource().equals(out0))
 		{	
+		    currentPort = block.getOutputPort(0);
+			connecting = true;
 			System.out.println("out0\n");
+		}
+		
+		if (me.getSource().equals(setIn0))
+		{	
+			String s = (String)JOptionPane.showInputDialog(
+			                    currentComponent.getParent(),
+			                    "Set inputPort 0",
+			                    null, JOptionPane.PLAIN_MESSAGE,
+			                    null, null, null);
+			double value = Double.parseDouble(s);
+			block.getInputPort(0).setValue("float", value);
+			System.out.println("setIn0\n");
+			MainFrame.end = new Point(endComponent.getLocation());
+		}
+		
+		else if (me.getSource().equals(setIn1))
+		{	
+			String s = (String)JOptionPane.showInputDialog(
+			                    currentComponent.getParent(),
+			                    "Set inputPort 0",
+			                    null, JOptionPane.PLAIN_MESSAGE,
+			                    null, null, null);
+			double value = Double.parseDouble(s);
+			block.getInputPort(1).setValue("float", value);
+			System.out.println("setIn1\n");
 		}
 		// TODO Auto-generated method stub
 		
-		connecting = true;
+		((JComponent) currentComponent).setToolTipText("<html>"
+				+"Input port 0 = " + block.getInputPort(0).getValue("float") 
+				+"<br>"
+				+"Input port 1 = " + block.getInputPort(1).getValue("float") 
+				+"<br>"
+				+"Output port 0 = " + block.getOutputPort(0).getValue("float"));
+
 	}
+	
+    public void mouseEntered(MouseEvent me)
+    {
+    	
+        ToolTipManager.sharedInstance().setDismissDelay(60000);
+    	
+    }
+    
+    public void mouseExited(MouseEvent me)
+    {
+    	ToolTipManager.sharedInstance().setDismissDelay(defaultDismissTimeout);
+    	afterPressing = false;
+    }
 }
