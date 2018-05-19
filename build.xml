@@ -46,6 +46,7 @@
 			<manifest>
 				<attribute name="Main-Class" value="ija.proj.gui.Main"/>
 			</manifest>
+			<fileset dir="src" includes="ija/proj/gui/img/blocks/**" />
 		</jar>
 	</target>
 
@@ -66,7 +67,7 @@
 	</target>
 
 	<target name="libs">
-		<exec executable="/bin/sh">
+		<exec executable="/bin/bash">
 			<arg value="lib/get-libs.sh"/>
 		</exec>
 	</target>
