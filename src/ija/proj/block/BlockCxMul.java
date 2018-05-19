@@ -1,8 +1,15 @@
+/**
+ * Backend representation of "CxMul" block.
+ * @brief Package for Block type "CxMul" from group "Complex arithmetic"
+ * @file BlockCxMul.java
+ * @author Jiri Furda (xfurda00)
+ */
+
 package ija.proj.block;
 
 public class BlockCxMul extends BlockComplex
 {
-    void executeSpecific() 
+    void executeSpecific()  /// @brief executeSpecific mutliplies two complex values from input Ports and saves it to output Port
     {
         Double x_re = this.getInputPort(0).getValue("real");
         Double x_im = this.getInputPort(0).getValue("imaginary");

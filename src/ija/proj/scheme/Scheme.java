@@ -1,9 +1,22 @@
+/**
+ * Backend representation of scheme.
+ * @brief Package for Scheme
+ * @file Scheme.java
+ * @author Jiri Furda (xfurda00)
+ */
+
 package ija.proj.scheme;
 
 import ija.proj.block.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import ija.proj.gui.MainFrame;
+
+
+/**
+ * @brief The Scheme class is backend representation of scheme and contains its interface.
+ */
 public class Scheme implements Serializable
 {
     // --- Attributes ---
@@ -16,9 +29,13 @@ public class Scheme implements Serializable
     private Block expectedNextBlock;
     
     // --- Constants ---
-    public static final Block LoopDetected = new BlockAdd();    // Pseudo block beacuse fuck Java
+    private static final Block LoopDetected = new BlockAdd();    // Pseudo block
     
     // --- Constructor ---
+    /**
+     * @brief Constructor of class Scheme.
+     * @param name  Name of the Scheme.
+     */
     public Scheme(String name)
     {
         this.name = name;
@@ -29,9 +46,9 @@ public class Scheme implements Serializable
     }
     
     /**
-     * @brief Adds block to scheme blocks list
-     * @param block Block to be added
-     * @return true if succesful, false if not
+     * @brief Adds block to scheme blocks list.
+     * @param block Block to be added.
+     * @return True if succesful, false if not.
      */
     public boolean addBlock(Block block)
     {
@@ -59,7 +76,12 @@ public class Scheme implements Serializable
         
         return true;
     }
-    
+
+    /**
+     * @brief Removes block from scheme blocks list.
+     * @param block Block to be removed.
+     * @return True if succesful, false if not.
+     */    
     public boolean removeBlock(Block block)
     {
         if(this.readOnly)
@@ -88,7 +110,8 @@ public class Scheme implements Serializable
     }
     
     /**
-     * @brief Runs the calucation of scheme
+     * @brief run executes whole Scheme.
+     * @return True when successful, false when not.
      */
     public boolean run()
     { 
@@ -105,7 +128,12 @@ public class Scheme implements Serializable
         
         return true;
     }
-    
+
+    /**
+     * @brief runStep executes one step of the Scheme.
+     * @param highlight determines if executed block should be highlighted (stepping mode).
+     * @return True when successful, false when not.
+     */    
     public boolean runStep()
     {
         // --- Already finished executing ---
@@ -167,9 +195,9 @@ public class Scheme implements Serializable
     }
     
     /**
-     * @brief Does one step of running scheme
-     * @param expectedNextBlock Block that is expected to be executed in this step
-     * @return Block that is expected to be executed in next step or null when no idea what should be executed next
+     * @brief Does one step of running scheme.
+     * @param expectedNextBlock Block that is expected to be executed in this step.
+     * @return Block that is expected to be executed in next step or null when no idea what should be executed next.
      */
     private Block step_internal(Block expectedNextBlock)
     {
@@ -195,7 +223,7 @@ public class Scheme implements Serializable
     }
     
     /**
-     * @brief Check all blocks in scheme if they need user's input
+     * @brief Check all blocks in scheme if they need user's input.
      * @todo Input Dialog
      */
     private void searchUserDependentBlocks()
@@ -211,8 +239,8 @@ public class Scheme implements Serializable
                        if(Double.isNaN(port.getValue(name)))    // If value not set
                        {
                            // @todo user input dialog
-                           System.err.println("Scheme.searchUserDependentBlocks: @todo user input dialog");
-                           port.setValue(name, 420);
+                           //System.err.println("Scheme.searchUserDependentBlocks: @todo user input dialog");
+                           port.setValue(name, MainFrame.fillValues(block, port, name));
                        }                        
                    }
                }
@@ -221,10 +249,9 @@ public class Scheme implements Serializable
     }
 
     /**
-     * @brief Search first non-dependent block in specified blocks ancestors
-     * @param block Block from where to start search
-     * @todo Not sure what happens when there is nowhere to continue search
-     * @return
+     * @brief findNonDependentBlock resets loopDetection and searches first non-dependent block in specified blocks ancestors.
+     * @param block Block from where to start search.
+     * @return  Block that can be executed.
      */      
     private Block findNonDependentBlock(Block block)
     {
@@ -235,12 +262,11 @@ public class Scheme implements Serializable
     }
     
     /**
-     * @brief Search first non-dependent block in specified blocks ancestors
-     * @param block Block from where to start search
-     * @todo Not sure what happens when there is nowhere to continue search
-     * @return
+     * @brief findNonDependentBlock_private is internal method searching first non-dependent block in specified blocks ancestors.
+     * @param block Block from where to start search.
+     * @return Block that can be executed.
      * 
-     * @warning DO NOT CALL THIS METHOD! Use Scheme.findNonDependentBlock() instead
+     * @warning DO NOT CALL THIS METHOD! Use Scheme.findNonDependentBlock() instead!
      */    
     private Block findNonDependentBlock_private(Block block)
     {
@@ -285,13 +311,21 @@ public class Scheme implements Serializable
         return block;
     }
     
-    public ArrayList<Block> getBlocks() // For testing SchemeFile
+    /**
+     * @brief getBlocks is method for testing purposes that returns array of blocks in the Scheme.
+     * @return Array of blocks in the Scheme.
+     */
+    public ArrayList<Block> getBlocks()
     {
         return this.blocks;
     }
     
-    public boolean isReadOnly() 
-    {
-        return this.readOnly;
-    }
+    /**
+     * @brief isReadOnly is method determing if Scheme is in read-only mode.
+     * @return True when Scheme is read-only, false when not.
+     */
+    public boolean isReadOnly()  
+    { 
+        return this.readOnly; 
+    } 
 }

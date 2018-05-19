@@ -56,7 +56,6 @@ public class SchemeTest {
         blockA = new BlockAdd();
         blockB = new BlockAdd();
         blockC = new BlockAdd();
-
         blockA.getInputPort(0).setValue("float", 5);
         blockA.getInputPort(1).setValue("float", 4);
         
@@ -97,6 +96,7 @@ public class SchemeTest {
         
         Assert.assertEquals(10, blockC.getOutputPort(0).getValue("float"), 0.02);
     }    
+    
     
     @Test
     public void test_run_advanced()
@@ -254,4 +254,49 @@ public class SchemeTest {
         
         Assert.assertFalse(scheme.runStep());  
     }        
+    
+    
+    @Test
+    public void test_sparete_trees()
+    {       
+        blockA = new BlockAdd();
+        blockB = new BlockSub();
+        blockC = new BlockMul();
+        blockD = new BlockDiv();
+        blockE = new BlockAdd();
+        
+        scheme = new Scheme("Test");
+        
+        scheme.addBlock(blockD);
+        scheme.addBlock(blockE);
+        scheme.addBlock(blockA);
+        scheme.addBlock(blockC);
+        scheme.addBlock(blockB);
+
+        blockA.getInputPort(0).setValue("float", 3);
+        blockA.getInputPort(1).setConnectedPort(blockB.getOutputPort(0));
+        
+        blockB.getInputPort(0).setValue("float", 1);
+        blockB.getInputPort(1).setValue("float", 2);
+        
+        blockC.getInputPort(0).setConnectedPort(blockD.getOutputPort(0));
+        blockC.getInputPort(1).setValue("float", 6);
+        
+        blockD.getInputPort(0).setValue("float", 4);
+        blockD.getInputPort(1).setValue("float", 5);
+        
+        blockE.getInputPort(0).setValue("float", 7);
+        blockE.getInputPort(1).setValue("float", 8);
+        
+        Assert.assertTrue(scheme.run());
+        
+        Assert.assertEquals(-1, blockB.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(2, blockA.getOutputPort(0).getValue("float"), 0.02);
+        
+        Assert.assertEquals(0.8, blockD.getOutputPort(0).getValue("float"), 0.02);
+        Assert.assertEquals(4.8, blockC.getOutputPort(0).getValue("float"), 0.02);
+        
+        Assert.assertEquals(15, blockE.getOutputPort(0).getValue("float"), 0.02);
+    }
+    
 }
