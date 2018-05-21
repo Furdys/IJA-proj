@@ -8,9 +8,16 @@
 package ija.proj.scheme;
 
 import ija.proj.block.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import ija.proj.gui.BlockComponent;
 import ija.proj.gui.MainFrame;
 
 
@@ -27,6 +34,7 @@ public class Scheme implements Serializable
     private ArrayList<Block> notExecutedBlocks;
     private ArrayList<Block> loopDetectionTrace;
     private Block expectedNextBlock;
+    private ByteArrayOutputStream serializedBackup;
     
     // --- Constants ---
     private static final Block LoopDetected = new BlockAdd();    // Pseudo block
@@ -112,9 +120,38 @@ public class Scheme implements Serializable
     /**
      * @brief run executes whole Scheme.
      * @return True when successful, false when not.
+     * @throws IOException 
+     * @throws ClassNotFoundException 
      */
     public boolean run()
     { 
+    	
+    	serializedBackup = new ByteArrayOutputStream();
+    	ObjectOutputStream out = null;
+		try
+		{
+			out = new ObjectOutputStream(serializedBackup);
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	try
+		{
+			out.writeObject(new ArrayList<Block>(this.blocks));
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	try
+		{
+			out.close();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         // --- Execution ---
         do
         {
@@ -186,6 +223,8 @@ public class Scheme implements Serializable
         
         // --- Copy blocks list ---
         this.notExecutedBlocks = new ArrayList<Block>(this.blocks);
+		System.out.println(this.notExecutedBlocks.size());
+		System.out.println(this.blocks.size());
         
         // --- Reset expected block variable ---
         this.expectedNextBlock = null;
@@ -328,4 +367,59 @@ public class Scheme implements Serializable
     { 
         return this.readOnly; 
     } 
+    
+    public void resetValues()
+    {
+    	for (Block block : this.blocks)
+    	{
+    		for (Port outputPort : block.getOutputPorts())
+    		{
+    			for (String name : outputPort.getNames())
+    			{
+    				outputPort.setValue(name, Double.NaN);
+    				System.out.println("ano");
+    			}
+    		}
+    		
+
+    		block.setWasExecuted(false);
+    	}
+    	this.finished = false;
+        this.expectedNextBlock = null;
+        this.readOnly = false;
+        
+    	byte[] payload = serializedBackup.toByteArray();
+    	ByteArrayInputStream bIn = new ByteArrayInputStream(payload);
+    	ObjectInputStream in =
+		null;
+		try
+		{
+			in = new ObjectInputStream(bIn);
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	try
+		{
+			this.blocks = (ArrayList<Block>) in.readObject();
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	try
+		{
+			in.close();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+
 }

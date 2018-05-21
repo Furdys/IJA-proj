@@ -110,6 +110,7 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
     		int x = location.x - pressed.getX() + me.getX();
     		int y = location.y - pressed.getY() + me.getY();
     		component.setLocation(x, y);
+    		component.getParent().repaint();
     	}
      }
     
@@ -232,13 +233,13 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 						block.getInputPort(1).setValue("bool", 0.0);				
 					}
 					
-					if (s == "False")
+					if (s == "True")
 					{
 						block.getInputPort(1).setValue("bool", 1.0);					
 					}
 					
 				}
-				System.out.println("setIn0\n");
+				System.out.println("setIn1\n");
 
 			
 			}
