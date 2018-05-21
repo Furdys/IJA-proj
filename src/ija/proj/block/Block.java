@@ -19,6 +19,9 @@ public abstract class Block implements Serializable
     private Port[] inputPorts; 
     private Port[] outputPorts;
     private boolean executed = false;
+    private int xLocation;
+    private int yLocation;
+    private String pictureName;
 
     // --- Cunstructors ---
     /**
@@ -180,4 +183,39 @@ public abstract class Block implements Serializable
 
         return result.trim();    // Remove last \n
     }
+    
+    public void setWasExecuted(boolean executed)
+    {
+    	this.executed = executed;
+    }
+
+	public int getxLocation()
+	{
+		return xLocation;
+	}
+
+	public int getyLocation()
+	{
+		return yLocation;
+	}
+
+	public void setxLocation(int xLocation)
+	{
+		this.xLocation = xLocation;
+	}
+
+	public void setyLocation(int yLocation)
+	{
+		this.yLocation = yLocation;
+	}
+
+	public String getPictureName()
+	{
+		return pictureName;
+	}
+
+	public void setPictureName(String pictureName)
+	{
+		this.pictureName = pictureName;
+	}
 }

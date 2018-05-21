@@ -7,10 +7,12 @@
 
 package ija.proj.gui;
 
+import java.io.Serializable;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-public class Main  
+public class Main implements Serializable
 {
 
 	public static void main(String[] args) 
@@ -26,7 +28,7 @@ public class Main
 						frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 						frame.setVisible(true);
 						frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-						
+				
 					}
 				});
 	}
