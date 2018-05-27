@@ -1,0 +1,19 @@
+digraph "ija.proj.block.BlockComplex"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="ija.proj.block.BlockComplex",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="ija.proj.block.Block",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classija_1_1proj_1_1block_1_1Block.html",tooltip="The Block class is backend representation of block and contains its interface. This class is abstract..."];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="Serializable",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="ija.proj.block.BlockCxAdd",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classija_1_1proj_1_1block_1_1BlockCxAdd.html",tooltip="The BlockCxAdd class is Block adding two complex numbers. "];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="ija.proj.block.BlockCxDiv",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classija_1_1proj_1_1block_1_1BlockCxDiv.html",tooltip="The BlockCxDiv class is Block dividing two complex numbers. "];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="ija.proj.block.BlockCxMul",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classija_1_1proj_1_1block_1_1BlockCxMul.html"];
+  Node1 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="ija.proj.block.BlockCxSub",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classija_1_1proj_1_1block_1_1BlockCxSub.html",tooltip="The BlockCxSub class is Block substracting two complex numbers. "];
+}

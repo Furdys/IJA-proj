@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
@@ -20,13 +21,14 @@ import javax.swing.event.MouseInputAdapter;
 import ija.proj.block.Port;
 import ija.proj.block.Block;
 import ija.proj.scheme.Scheme;
+import javafx.scene.shape.Line;
 
 public class DragListener extends MouseInputAdapter implements ActionListener, Serializable
 {
     private Point location;
     private MouseEvent pressed;
     private boolean afterPressing = false;
-    private JMenuItem in0, in1, out0, setIn0, setIn1;
+    private JMenuItem in0, in1, out0, setIn0, setIn1, removeBlock;
     private JPopupMenu menu;
     private Graphics2D graphics;
     private Point helper; // for getLocation()
@@ -35,6 +37,7 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
     private boolean connecting = false;
     private Port currentPort;
     private JLabel infoBlock;
+    private BlockComponent previousBlockComponent;
     private final int defaultDismissTimeout = ToolTipManager.sharedInstance().getDismissDelay();
  
     public void mousePressed(MouseEvent me)
@@ -94,6 +97,9 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
     		menu.add(setIn0);
     		menu.add(setIn1);
     		
+    		removeBlock = new JMenuItem("Remove Block");
+    		removeBlock.addActionListener(this);
+    		menu.add(removeBlock);
 
     		menu.show(component, me.getX(), me.getY());
     		
@@ -126,12 +132,14 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 		
 		Block block = null;
 		Component endComponent = null;
+		BlockComponent currentBlockComponent = null;
 		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
 		{
 			if (blockComponent.getComponent().equals(currentComponent))
 			{
 				block = blockComponent.getBlock();
 				endComponent = blockComponent.getComponent();
+				currentBlockComponent = blockComponent;
 				break;
 			}
 			
@@ -141,18 +149,25 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 		{
 		    block.getInputPort(0).setConnectedPort(currentPort);
 			System.out.println("in0\n");
+			//currentBlockComponent.setLine(new Line());
+			previousBlockComponent.setLine(new Line());
+			endComponent.getParent().repaint();
 		}
 		
 		else if (me.getSource().equals(in1))
 		{	
 		    block.getInputPort(1).setConnectedPort(currentPort);
 			System.out.println("in1\n");
+			//currentBlockComponent.setLine(new Line());
+			previousBlockComponent.setLine(new Line());
+			endComponent.getParent().repaint();
 		}
 		
 		else if (me.getSource().equals(out0))
 		{	
 		    currentPort = block.getOutputPort(0);
 			connecting = true;
+			previousBlockComponent = currentBlockComponent;
 			System.out.println("out0\n");
 		}
 		
@@ -162,8 +177,10 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 			Set<String> names = block.getInputPort(0).getNames();
 			for (String name : names)
 			{
+				System.out.println(name);
 				if (name == "float" || name == "real" || name == "imaginary")
 				{
+					System.out.println("setIn0 ......");
 					String s = (String)JOptionPane.showInputDialog(
 					                    currentComponent.getParent(),
 					                    "Set inputPort 0 [" + name + "]",
@@ -189,7 +206,7 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 						block.getInputPort(0).setValue("bool", 0.0);				
 					}
 					
-					if (s == "False")
+					if (s == "True")
 					{
 						block.getInputPort(0).setValue("bool", 1.0);					
 					}
@@ -203,7 +220,7 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 		
 		else if (me.getSource().equals(setIn1))
 		{	
-			Set<String> names = block.getInputPort(0).getNames();
+			Set<String> names = block.getInputPort(1).getNames();
 			for (String name : names)
 			{
 				if (name == "float" || name == "real" || name == "imaginary")
@@ -243,6 +260,29 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 
 			
 			}
+		}
+		
+		else if (me.getSource().equals(removeBlock))
+		{
+			JPanel panel = (JPanel) endComponent.getParent();
+			System.out.println("removeBlock");
+			MainFrame.getScheme().removeBlock(currentBlockComponent.getBlock());
+			endComponent.getParent().remove(endComponent);
+			for (Port connectedPort : currentBlockComponent.getBlock().getOutputPorts())
+			{
+				for (BlockComponent connectedBlockComponent : MainFrame.getBlockComponents())
+				{
+					if (connectedBlockComponent.getBlock() == connectedPort.getOwnerBlock())
+					{
+						connectedBlockComponent.setLine(null);
+					}
+				}
+				
+			}
+			
+			MainFrame.getBlockComponents().remove(currentBlockComponent);
+			panel.repaint();
+			
 		}
 		// TODO Auto-generated method stub
 		

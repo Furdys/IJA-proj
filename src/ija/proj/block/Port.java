@@ -178,6 +178,12 @@ public class Port implements Serializable
         return this.connectedPort;
     }	
     
+    public void resetConnectedPort()
+    {
+    	this.connectedPort = null;
+    	
+    }
+    
     /**
      * @brief getOwnerBlock is method returting pointer of Block that owns this Port
      * @return Pointer of Block that owns this Port
@@ -216,12 +222,15 @@ public class Port implements Serializable
         for(String name : this.getNames())
         {
             result += "["+name+"]";
+            result += this.getValue(name);
         }
 
         if(this.getConnectedPort() == null)
             result += " Not connected";
-        else
-            result += " Connected";
+       /* else
+            result += " Connected";*/
+        
+        
     
         return result;  // [real][imaginary] Not connected
     }

@@ -48,6 +48,7 @@ import org.junit.Assert;
 import ija.proj.block.*;
 import ija.proj.scheme.Scheme;
 import ija.proj.scheme.SchemeFile;
+import javafx.scene.shape.Line;
 
 
 
@@ -87,7 +88,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		this.c = getContentPane();
 		JFrame MainFrameRef = this;
 		fc = new JFileChooser();
-		
+			
 		/*this.scheme = new Scheme("tmp"); //TODO what names?
 		this.blockComponents = new ArrayList<BlockComponent>();
 		this.drag = new DragListener();
@@ -165,6 +166,10 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 	            	System.out.println("Save command cancelled by user.");
 	            }
 				System.out.println("After Save");
+			/*	for (Block block : MainFrame.getScheme().getBlocks())
+				{
+					System.out.println(block.getInputPort(0).getValue("float"));
+				}*/
 			}
 		});
 		
@@ -188,6 +193,10 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 	            	System.out.println("Open command cancelled by user.");
 	            }
 				System.out.println("After Load");
+				/*for (Block block : MainFrame.getScheme().getBlocks())
+				{
+					System.out.println(block.getInputPort(0).getValue("float"));
+				}*/
 			}
 		});
 		
@@ -391,7 +400,6 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		block.setxLocation(blockPanel.getX());
 		block.setyLocation(blockPanel.getY());
 
-		
 		MainFrame.blockComponents.add(new BlockComponent(block, blockPanel));
 		
 		blockPanel.addMouseListener(drag);
@@ -468,7 +476,8 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 				                    null, JOptionPane.PLAIN_MESSAGE,
 				                    null, null, null);
 				value = Double.parseDouble(s);
-				block.getInputPort(0).setValue("float", value);
+				//block.getInputPort(0).setValue("float", value);
+				port.setValue("float", value);
 			}
 			
 			else if (name == "bool")
@@ -603,7 +612,14 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 			blockPanel.setSize(128,135);
 			blockPanel.setLocation(block.getxLocation(), block.getyLocation());
 			
-			MainFrame.blockComponents.add(new BlockComponent(block, blockPanel));
+			//MainFrame.blockComponents.add(new BlockComponent(block, blockPanel));
+			
+			BlockComponent blockComponent = new BlockComponent(block, blockPanel);
+			if (block.getOutputPort(0) != null)
+			{
+				blockComponent.setLine(new Line());
+			}
+			MainFrame.blockComponents.add(blockComponent);
 			
 			blockPanel.addMouseListener(drag);
 			blockPanel.addMouseMotionListener(drag);
@@ -614,15 +630,24 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 			
 			((JComponent) blockPanel).setToolTipText(block.printPorts());
 			
-			MainFrame.c.revalidate();
+			//MainFrame.c.revalidate();
 			
-		
+			
 		}
 		
+		
+		MainFrame.c.revalidate();
+		
 	}
-	public static void setScheme(Scheme newScheme)
+
+	public static Scheme getScheme()
 	{
-		   scheme = newScheme;
+		return scheme;
+	}
+
+	public static void setScheme(Scheme scheme)
+	{
+		MainFrame.scheme = scheme;
 	}
 	
 }

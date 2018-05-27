@@ -6,6 +6,7 @@ import java.io.Serializable;
 import javax.swing.JComponent;
 import ija.proj.*;
 import ija.proj.block.Block;
+import javafx.scene.shape.Line;
 
 
 
@@ -16,6 +17,7 @@ public class BlockComponent implements Serializable
 	private static int existingBlocks = 0;
 	private Block block;
 	private Component component;
+    private Line line = null;
 
 	public BlockComponent(Block block, Component component)
 	{
@@ -44,6 +46,16 @@ public class BlockComponent implements Serializable
 	public void setComponent(Component component)
 	{
 		this.component = component;
+	}
+
+	public Line getLine()
+	{
+		return line;
+	}
+
+	public void setLine(Line line)
+	{
+		this.line = line;
 	}
 	
 /*	public void updateTip()

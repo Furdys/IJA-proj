@@ -111,6 +111,27 @@ public class Scheme implements Serializable
             System.err.println("Schene.removeBlock(): Scheme doesn't contain this block");
             return false;     
         }
+               
+        for (Port port : block.getInputPorts())
+        {
+        	
+        	Port connectedPort = port.getConnectedPort();
+        	if (connectedPort != null)
+        	{
+        		//connectedPort = null;
+        		connectedPort.resetConnectedPort();
+        	}
+        }
+        
+        for (Port port : block.getOutputPorts())
+        {
+        	Port connectedPort = port.getConnectedPort();
+        	if (connectedPort != null)
+        	{
+        		//connectedPort = null;
+        		connectedPort.resetConnectedPort();
+        	}
+        }
         
         this.blocks.remove(block);
         
@@ -126,7 +147,7 @@ public class Scheme implements Serializable
     public boolean run()
     { 
     	
-    	serializedBackup = new ByteArrayOutputStream();
+    /*	serializedBackup = new ByteArrayOutputStream();
     	ObjectOutputStream out = null;
 		try
 		{
@@ -151,7 +172,7 @@ public class Scheme implements Serializable
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
         // --- Execution ---
         do
         {
@@ -387,11 +408,11 @@ public class Scheme implements Serializable
     	this.finished = false;
         this.expectedNextBlock = null;
         this.readOnly = false;
+
         
-    	byte[] payload = serializedBackup.toByteArray();
+   /* 	byte[] payload = serializedBackup.toByteArray();
     	ByteArrayInputStream bIn = new ByteArrayInputStream(payload);
-    	ObjectInputStream in =
-		null;
+    	ObjectInputStream in = null;
 		try
 		{
 			in = new ObjectInputStream(bIn);
@@ -419,7 +440,7 @@ public class Scheme implements Serializable
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
     }
 
 }
