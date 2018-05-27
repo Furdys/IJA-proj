@@ -178,7 +178,7 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 			for (String name : names)
 			{
 				System.out.println(name);
-				if (name == "float" || name == "real" || name == "imaginary")
+				if ("float".equals(name) || "real".equals(name) || "imaginary".equals(name))
 				{
 					System.out.println("setIn0 ......");
 					String s = (String)JOptionPane.showInputDialog(
@@ -190,7 +190,7 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 					block.getInputPort(0).setValue("float", value);
 				}
 				
-				else if (name == "bool")
+				else if ("bool".equals(name))
 				{
 					Object[] possibilities = {"False", "True"};
 					String s = (String)JOptionPane.showInputDialog(
@@ -223,7 +223,7 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 			Set<String> names = block.getInputPort(1).getNames();
 			for (String name : names)
 			{
-				if (name == "float" || name == "real" || name == "imaginary")
+				if ("float".equals(name) || "real".equals(name) || "imaginary".equals(name))
 				{
 					String s = (String)JOptionPane.showInputDialog(
 					                    currentComponent.getParent(),
@@ -234,7 +234,7 @@ public class DragListener extends MouseInputAdapter implements ActionListener, S
 					block.getInputPort(1).setValue("float", value);
 				}
 				
-				else if (name == "bool")
+				else if ("bool".equals(name))
 				{
 					Object[] possibilities = {"False", "True"};
 					String s = (String)JOptionPane.showInputDialog(

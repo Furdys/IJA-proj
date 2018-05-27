@@ -144,7 +144,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		this.itemResetValues = new JMenuItem("Reset Values");
 		this.itemResetValues.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				resetValues();
+				MainFrame.resetValues();
 			}
 		});
 		
@@ -468,7 +468,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		
 		
 		double value = 0.0;
-			if (name == "float" || name == "real" || name == "imaginary")
+		if ("float".equals(name) || "real".equals(name) || "imaginary".equals(name))
 			{
 				String s = (String)JOptionPane.showInputDialog(
 				                    component.getParent(),
@@ -480,7 +480,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 				port.setValue("float", value);
 			}
 			
-			else if (name == "bool")
+			else if ("bool".equals(name))
 			{
 				Object[] possibilities = {"False", "True"};
 				String s = (String)JOptionPane.showInputDialog(
@@ -566,9 +566,9 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		setUp();
 	}
 	
-	public void resetValues()
+	public static void resetValues()
 	{
-		this.scheme.resetValues();	
+		MainFrame.scheme.resetValues();	
 		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
 		{
 			((JComponent) blockComponent.getComponent()).setToolTipText(blockComponent.getBlock().printPorts());
@@ -577,6 +577,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 	
 	public static void preSave()
 	{
+		MainFrame.resetValues();
 		for (BlockComponent blockComponent : MainFrame.blockComponents)
 		{
 			blockComponent.getBlock().setxLocation(blockComponent.getComponent().getX());
