@@ -36,7 +36,24 @@ public class MainPanel extends JPanel
             	
             	for (BlockComponent blockComponent : MainFrame.getBlockComponents())
             	{
-            		if (blockComponent.getLine() != null)
+            		if(blockComponent.getInputRect0().contains(e.getX(), e.getY()))
+            		{
+            			setToolTipText(blockComponent.getBlock().getInputPort(0).print());
+            			break;
+            		}
+            		else if(blockComponent.getInputRect1().contains(e.getX(), e.getY()))  
+            		{
+            			setToolTipText(blockComponent.getBlock().getInputPort(1).print());
+            			break;
+            		}
+                	else if(blockComponent.getOutputRect().contains(e.getX(), e.getY()))
+                	{
+            			setToolTipText(blockComponent.getBlock().getOutputPort(0).print());
+            			break;
+                	}
+                		
+            		
+                	else if (blockComponent.getLine() != null)
             		{
 	            		if ( blockComponent.getLine().contains(e.getX(), e.getY() ))
 	            		{
@@ -49,9 +66,17 @@ public class MainPanel extends JPanel
 	            		{
 	            			setToolTipText(null);
 	            		}
+	            		
+            		}
+            		
+            		else
+            		{
+            			setToolTipText(null);
             		}
             		
             	}
+            	
+            	
 
                 ToolTipManager.sharedInstance().mouseMoved(e);
                 ToolTipManager.sharedInstance().setDismissDelay(60000);
@@ -70,6 +95,7 @@ public class MainPanel extends JPanel
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
 		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
 		{
 			blockComponent.getBlock().setxLocation(blockComponent.getComponent().getX());
@@ -79,6 +105,15 @@ public class MainPanel extends JPanel
 		
 		for (BlockComponent blockComponent : MainFrame.getBlockComponents())
 		{
+			g2d.setColor(Color.BLUE);
+			blockComponent.getInputRect0().setLocation(blockComponent.getComponent().getX()-22, blockComponent.getComponent().getY()+37);
+			blockComponent.getInputRect1().setLocation(blockComponent.getComponent().getX()-22, blockComponent.getComponent().getY()+87);
+			blockComponent.getOutputRect().setLocation(blockComponent.getComponent().getX()+128, blockComponent.getComponent().getY()+57);
+			
+			g2d.fillRect(blockComponent.getInputRect0().x, blockComponent.getInputRect0().y, blockComponent.getInputRect0().width, blockComponent.getInputRect0().height);
+			g2d.fillRect(blockComponent.getInputRect1().x, blockComponent.getInputRect1().y, blockComponent.getInputRect1().width, blockComponent.getInputRect1().height);
+			g2d.fillRect(blockComponent.getOutputRect().x, blockComponent.getOutputRect().y, blockComponent.getOutputRect().width, blockComponent.getOutputRect().height);
+			
 			if (blockComponent.getLine() != null)
 			{
 			for (Port currentPort : blockComponent.getBlock().getOutputPorts())
@@ -86,7 +121,7 @@ public class MainPanel extends JPanel
 				Port connectedPort = currentPort.getConnectedPort();
 				if (connectedPort != null)
 				{
-			        Graphics2D g2d = (Graphics2D) g;
+			     //   Graphics2D g2d = (Graphics2D) g;
 					Block connectedBlock = connectedPort.getOwnerBlock();
 					x1 = currentPort.getOwnerBlock().getxLocation();
 					y1 = currentPort.getOwnerBlock().getyLocation();
@@ -98,20 +133,20 @@ public class MainPanel extends JPanel
 					blockComponent.getLine().setStartX(x1+150);
 					blockComponent.getLine().setStartY(y1+67);
 					g2d.setColor(Color.BLACK);
-					g2d.fillRect(x1+128, y1+57, 22, 20);
+					//g2d.fillRect(x1+128, y1+57, 22, 20);
 					
 					if (connectedPort.equals(connectedPort.getOwnerBlock().getInputPort(0)))
 					{
 						blockComponent.getLine().setEndX(x2-22);
 						blockComponent.getLine().setEndY(y2+47);
-						g2d.fillRect(x2-22, y2+37, 22, 20);
+						//g2d.fillRect(x2-22, y2+37, 22, 20);
 					}
 					
 					else if (connectedPort.equals(connectedPort.getOwnerBlock().getInputPort(1)))
 					{
 						blockComponent.getLine().setEndX(x2-22);
 						blockComponent.getLine().setEndY(y2+97);
-						g2d.fillRect(x2-22, y2+87, 22, 20);
+						//g2d.fillRect(x2-22, y2+87, 22, 20);
 					}
 					
 					

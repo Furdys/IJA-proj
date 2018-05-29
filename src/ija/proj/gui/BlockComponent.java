@@ -1,6 +1,7 @@
 package ija.proj.gui;
 
 import java.awt.Component;
+import java.awt.Rectangle;
 import java.io.Serializable;
 
 import javax.swing.JComponent;
@@ -18,6 +19,9 @@ public class BlockComponent implements Serializable
 	private Block block;
 	private Component component;
     private Line line = null;
+    private Rectangle outputRect;
+    private Rectangle inputRect0;
+    private Rectangle inputRect1;
 
 	public BlockComponent(Block block, Component component)
 	{
@@ -26,6 +30,9 @@ public class BlockComponent implements Serializable
 		this.createdBlocks++;
 		this.existingBlocks++;
 		this.component = component;
+		this.inputRect0 = new Rectangle(component.getX(), component.getY(), 22, 20);
+		this.inputRect1 = new Rectangle(component.getX(), component.getY(), 22, 20);
+		this.outputRect = new Rectangle(component.getX(), component.getY(), 22, 20);
 	}
 	
 	public Block getBlock()
@@ -56,6 +63,21 @@ public class BlockComponent implements Serializable
 	public void setLine(Line line)
 	{
 		this.line = line;
+	}
+
+	public Rectangle getOutputRect()
+	{
+		return outputRect;
+	}
+
+	public Rectangle getInputRect0()
+	{
+		return inputRect0;
+	}
+
+	public Rectangle getInputRect1()
+	{
+		return inputRect1;
 	}
 	
 /*	public void updateTip()

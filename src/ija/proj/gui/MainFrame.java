@@ -37,6 +37,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 import javax.swing.border.Border;
@@ -88,7 +89,7 @@ public class MainFrame extends JFrame implements MenuListener, ActionListener, K
 		this.c = getContentPane();
 		JFrame MainFrameRef = this;
 		fc = new JFileChooser();
-			
+
 		/*this.scheme = new Scheme("tmp"); //TODO what names?
 		this.blockComponents = new ArrayList<BlockComponent>();
 		this.drag = new DragListener();
