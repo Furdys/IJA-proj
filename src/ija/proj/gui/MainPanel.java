@@ -1,6 +1,7 @@
 package ija.proj.gui;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -27,7 +28,7 @@ public class MainPanel extends JPanel
     //private Line line=new Line();
 	public MainPanel()
 	{
-		
+			
         addMouseMotionListener(new MouseMotionListener() {
             
             @Override
@@ -94,13 +95,31 @@ public class MainPanel extends JPanel
 				//	System.out.print("x1: " + x1 + " y1: " + y1 + " x2: " + x2 + " y2:" + y2 + "\n");
 				//	g2d.drawLine(x1+64, y1+67, x2+64, y2+67);
 					//Line line = blockComponent.getLine();
-					blockComponent.getLine().setStartX(x1+64);
+					blockComponent.getLine().setStartX(x1+150);
 					blockComponent.getLine().setStartY(y1+67);
-					blockComponent.getLine().setEndX(x2+64);
-					blockComponent.getLine().setEndY(y2+67);
+					g2d.setColor(Color.BLACK);
+					g2d.fillRect(x1+128, y1+57, 22, 20);
+					
+					if (connectedPort.equals(connectedPort.getOwnerBlock().getInputPort(0)))
+					{
+						blockComponent.getLine().setEndX(x2-22);
+						blockComponent.getLine().setEndY(y2+47);
+						g2d.fillRect(x2-22, y2+37, 22, 20);
+					}
+					
+					else if (connectedPort.equals(connectedPort.getOwnerBlock().getInputPort(1)))
+					{
+						blockComponent.getLine().setEndX(x2-22);
+						blockComponent.getLine().setEndY(y2+97);
+						g2d.fillRect(x2-22, y2+87, 22, 20);
+					}
+					
+					
 					Line line = blockComponent.getLine();
 				    g2d.setStroke(new BasicStroke(3));
+					g2d.setColor(Color.RED);
 					g2d.drawLine((int) line.getStartX(), (int) line.getStartY(), (int) line.getEndX(), (int) line.getEndY());
+
 				//	g2d.draw(rect);
 				}
 				
