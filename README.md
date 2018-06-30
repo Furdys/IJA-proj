@@ -2,6 +2,7 @@
 Bachelor study at FIT VUT Brno  
 4th semester - summer 2018  
 Subject: **Java Programming Language (IJA)**
+
 Similar project: *[C++ Block Editor](https://github.com/Furdys/ICP-proj)*
 
 ## Authors
@@ -21,7 +22,7 @@ Every block has its input and output ports which can be connected to a port of a
 
 ## Instalation
 For compilation use `ant compile` in root folder.
-This creates **ija-client.jar** in folder *dest-client* and also creates Doxygen in folder *doc*.
+This creates **ija-client.jar** in folder *dest-client* and also creates Doxygen in folder *doc*.  
 If you also want to open this program, use `ant run` instead.
 
 ## Screenshots
