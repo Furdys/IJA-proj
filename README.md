@@ -27,6 +27,9 @@ If you also want to open this program, use `ant run` instead.
 
 ## Screenshots
 ![Block Editor screenshot](https://imgur.com/rs4zuP9.gif)
+### Connecting blocks
 ![Connecting blocks example](https://imgur.com/vWQvCIm.gif)
+### Reading values
 ![Value reading example](https://i.imgur.com/MXLbucW.gif)
+### Moving block
 ![Moving block example](https://imgur.com/oYNECcU.gif)
