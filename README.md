@@ -18,7 +18,7 @@ We were given a second chance to complete missing features and obtain minimum po
 
 ## Description
 Block editor allows you to create a block scheme. It supports three unique value types (float, complex number and boolean) which are used by blocks for arithmetic (both real and complex) and by blocks for logic.
-Every block has its input and output ports which can be connected to a port of another block. Created scheme can be saved to file and also loaded from file. When your scheme is done, you can execute whole calculation at once or you can use stepping, which caclulates only one block at the time. Any value can be read by hovering over a connection or over a block. Editor also prevents loops and incompatibile connection
+Every block has its input and output ports which can be connected to a port of another block. Created scheme can be saved to file and also loaded from file. When your scheme is done, you can execute whole calculation at once or you can use stepping, which caclulates only one block at the time. Any value can be read by hovering over a connection or over a block. Editor also prevents loops and incompatibile connections.
 
 ## Instalation
 For compilation use `ant compile` in root folder.
